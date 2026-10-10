@@ -61,6 +61,32 @@ class VacancyCreateTest extends TestCase
             ->assertExactJson($response->json());
     }
 
+    public function test_rich_description_is_sanitized_saved_and_returned_on_detail(): void
+    {
+        $payload = $this->validPayload();
+        $payload['description_html'] = '<h2>Responsibilities</h2><p><u>Build</u> <code>accessible</code> products.</p>'
+            .'<ol><li>Review code</li></ol><pre><code>const ready = true;</code></pre>'
+            .'<a href="https://example.com/guide" onclick="alert(1)">Guide</a>'
+            .'<img src="https://example.com/team.png" alt="Team" onerror="alert(1)">'
+            .'<img src="javascript:alert(1)"><script>alert(1)</script>';
+
+        $response = $this->postJson('/api/vacancies', $payload)->assertCreated();
+        $html = $response->json('data.description_html');
+        $this->assertStringContainsString('<u>Build</u>', $html);
+        $this->assertStringContainsString('<code>accessible</code>', $html);
+        $this->assertStringContainsString('<pre><code>const ready = true;</code></pre>', $html);
+        $this->assertStringContainsString('src="https://example.com/team.png"', $html);
+        $this->assertStringContainsString('href="https://example.com/guide"', $html);
+        foreach (['onclick', 'onerror', 'javascript:', '<script>'] as $unsafe) {
+            $this->assertStringNotContainsString($unsafe, $html);
+        }
+        $id = $response->json('data.id');
+        $this->assertSame($html, Vacancy::findOrFail($id)->description_html);
+        $this->getJson('/api/vacancies/'.$id)
+            ->assertOk()
+            ->assertJsonPath('data.description_html', $html);
+    }
+
     #[DataProvider('requiredFieldProvider')]
     public function test_missing_required_fields_do_not_save_data(string $field): void
     {
@@ -125,6 +151,8 @@ class VacancyCreateTest extends TestCase
             'script-only description' => ['description_html', '<script>alert(1)</script>'],
             'image-only description' => ['description_html', '<img src="x" onerror="alert(1)">'],
             'empty editor content' => ['description_html', '<p><br></p>'],
+            'empty rich headings and code' => ['description_html', '<h2></h2><pre><code> </code></pre>'],
+            'safe image without text' => ['description_html', '<img src="https://example.com/team.png" alt="Team">'],
             'nonbreaking-space description' => ['description_html', '<p>&nbsp;</p>'],
             'invisible description' => ['description_html', "<p>\u{200B}</p>"],
         ];

@@ -29,6 +29,9 @@ class HtmlSanitizer
             'li',
             'blockquote',
             'a[href|title]',
+            'code',
+            'pre',
+            'img[src|alt|title]',
         ]));
         $config->set('URI.AllowedSchemes', [
             'http' => true,
@@ -37,6 +40,7 @@ class HtmlSanitizer
 
         // Keep definitions in memory instead of writing cache files into vendor.
         $config->set('Cache.DefinitionImpl', null);
+        $config->getDefinition('URI')->addFilter(new AbsoluteHttpUrlFilter, $config);
 
         $this->purifier = new HTMLPurifier($config);
     }

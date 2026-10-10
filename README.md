@@ -62,9 +62,9 @@ Use the search field to find part of a vacancy title. Searches run 300 ms after 
 
 Click a vacancy card to open `/vacancies/{id}`. The detail page loads its description and metadata from the API, including experience and candidate count. The back link restores the search keyword. Detail pages include a loading skeleton, a not-found message, and retry for request failures. Description lengths depend on the database content; the sample records contain brief descriptions.
 
-Use **Buat lowongan** in the navigation to open `/vacancies/create`. Fill in the title, position, employment type, candidate count, closing date, location, description, and experience level. Position and location provide native combobox suggestions and also accept custom text. The form requires a minimum salary. The maximum is optional for a base salary. Use the salary visibility switch to control whether candidates can see it. Enter the active-until date as DD/MM/YYYY or use the calendar button; the API receives YYYY-MM-DD. The description starts with an editable plain-text template.
+Use **Buat lowongan** in the navigation to open `/vacancies/create`. Fill in the title, position, employment type, candidate count, closing date, location, description, and experience level. Position and location provide native combobox suggestions and also accept custom text. The form requires a minimum salary. The maximum is optional for a base salary. Use the salary visibility switch to control whether candidates can see it. Enter the active-until date as DD/MM/YYYY or use the calendar button; the API receives YYYY-MM-DD. The description starts with an editable rich-text template.
 
-The form uses React Hook Form and a TanStack Query mutation. While the request is pending, fields and the submit button are disabled. Validation errors appear beside their fields, and failed requests preserve the current input. A successful submission invalidates all list queries and redirects to `/vacancies?created=1`, with an empty search and a success message. Descriptions currently use a plain-text textarea: text is HTML-escaped, paragraphs are separated by blank lines, and single newlines become line breaks. Rich-text editing is not yet available.
+The form uses React Hook Form and a TanStack Query mutation. While the request is pending, fields and the submit button are disabled. Validation errors appear beside their fields, and failed requests preserve the current input. A successful submission invalidates all list queries and redirects to `/vacancies?created=1`, with an empty search and a success message. Descriptions are edited with Tiptap and submitted as HTML.
 
 ## Configuration
 
@@ -88,7 +88,7 @@ Each item contains its title, position, company metadata, employment type, candi
 
 `GET /api/vacancies/{id}` returns one vacancy in a `data` object with the same public fields and an additional `description_html` field. Missing IDs and nonnumeric IDs return HTTP 404. Expired vacancies remain accessible through the detail endpoint.
 
-The detail response sanitizes description HTML with HTMLPurifier. Paragraphs, line breaks, headings (`h2`–`h4`), inline emphasis, lists, blockquotes, and HTTP/HTTPS links are supported. Scripts, embedded content, images, event handlers, styling attributes, and unsafe link schemes are removed. Reading a detail does not modify the stored description or salary values.
+The detail response sanitizes description HTML with HTMLPurifier. Paragraphs, line breaks, headings (`h2`–`h4`), inline emphasis, lists, blockquotes, code, images, and absolute HTTP/HTTPS links are supported. Scripts, embedded content, event handlers, styling attributes, and unsafe or relative URLs are removed. Reading a detail does not modify the stored description or salary values.
 
 ### Creating a vacancy
 
@@ -144,6 +144,8 @@ Invoke-RestMethod -Uri 'http://127.0.0.1:8000/api/vacancies' |
     ConvertTo-Json -Depth 5
 ```
 
+The description editor supports headings, bold, italic, underline, bullet and numbered lists, links, inline code, code blocks, and images from absolute HTTP(S) URLs. Select text before applying formatting or a link. Uploaded files are not supported. Descriptions must contain visible text; images alone are insufficient. The API sanitizes HTML and removes unsafe links, image sources, and event handlers.
+
 ## Tests and checks
 
 Run backend tests and checks from `backend`:
@@ -184,7 +186,7 @@ Search tests cover the 300 ms debounce, trimming and capitalization, clearing th
 
 Detail tests cover the complete list → search → card → detail → back flow with the actual API, browser back, direct URLs and reloads, company metadata, description content, loading, missing and invalid IDs, network/server errors with retry, mobile overflow, and footer spacing for short descriptions. Loading requests are held until the pending state is checked. A rich-text scenario intercepts the detail response to verify headings, emphasis, lists, and links without changing stored records; HTML sanitization is covered by the backend tests.
 
-Create tests submit the complete form to the actual API, verify list-cache refresh and an empty search on return, then search for and open the new vacancy. They also cover escaped description text, required-field and salary validation, field-level HTTP 422 errors, network/server failures, prevention of duplicate submissions, and mobile overflow. An automatic fixture removes only the IDs created by each test from `backend/database/e2e.sqlite`, preserving the four seeded samples and the development database.
+Create tests submit the complete form to the actual API, verify list-cache refresh and an empty search on return, then search for and open the new vacancy. Rich-text tests verify formatting saved through the API and rendered on detail, URL validation, toolbar actions, and formatting retained after a failed submission. Create tests also cover escaped description text, required-field and salary validation, field-level HTTP 422 errors, network/server failures, prevention of duplicate submissions, and mobile overflow. An automatic fixture removes only the IDs created by each test from `backend/database/e2e.sqlite`, preserving the four seeded samples and the development database.
 
 Playwright starts its own backend on port **8001** and frontend on port **3001**. These ports must be available. The regular development servers can remain running on ports 8000 and 3000.
 

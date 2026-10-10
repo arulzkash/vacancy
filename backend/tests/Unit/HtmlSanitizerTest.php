@@ -93,4 +93,32 @@ class HtmlSanitizerTest extends TestCase
 
         $this->assertSame('', $sanitizer->sanitize(''));
     }
+
+    public function test_it_preserves_editor_code_underline_and_safe_images(): void
+    {
+        $html = '<p><u>Important</u> <code>&lt;script&gt;literal&lt;/script&gt;</code></p>'
+            .'<pre><code>const value = 1;</code></pre>'
+            .'<img src="https://example.com/team.png" alt="Our team" title="Team" />';
+
+        $this->assertSame($html, (new HtmlSanitizer)->sanitize($html));
+    }
+
+    #[DataProvider('unsafeImageProvider')]
+    public function test_it_rejects_unsafe_or_relative_image_urls(string $url): void
+    {
+        $html = '<p>Safe text.</p><img src="'.$url.'" alt="Image" onerror="alert(1)">';
+        $this->assertSame('<p>Safe text.</p>', (new HtmlSanitizer)->sanitize($html));
+    }
+
+    public static function unsafeImageProvider(): array
+    {
+        return [
+            'javascript' => ['javascript:alert(1)'],
+            'encoded javascript' => ['java&#x73;cript:alert(1)'],
+            'data' => ['data:image/svg+xml;base64,PHN2Zz4='],
+            'relative' => ['/image.png'],
+            'protocol relative' => ['//example.com/image.png'],
+            'credentials' => ['https://user:pass@example.com/image.png'],
+        ];
+    }
 }

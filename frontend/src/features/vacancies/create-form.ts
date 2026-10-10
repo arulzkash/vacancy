@@ -1,4 +1,5 @@
 import type { EmploymentType, ExperienceLevel } from "./types";
+import { descriptionTemplate } from "./description-content";
 
 export type VacancyFormValues = {
   title: string;
@@ -23,8 +24,7 @@ export const vacancyFormDefaults: VacancyFormValues = {
   closing_date: "",
   location: "",
   is_remote: false,
-  description:
-    "Deskripsi Pekerjaan\nSebagai [Posisi Lowongan], Anda akan berpartisipasi dalam proses pembangunan aplikasi yang sedang dibangun dalam perusahaan [Nama Perusahaan]. Anda juga diharapkan mampu bekerja dalam tim.\n\nTanggung Jawab\n• Membuat atau memodifikasi program yang sudah ada.\n• Bertanggung jawab dalam mengelola program.",
+  description: descriptionTemplate,
   salary_min: "",
   salary_max: "",
   show_salary: false,
@@ -44,25 +44,6 @@ export function todayInJakarta(): string {
     .join("-");
 }
 
-export function textToDescriptionHtml(text: string): string {
-  const escaped = text.trim().replace(/[&<>"']/g, (character) => {
-    const entities: Record<string, string> = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;",
-    };
-    return entities[character];
-  });
-
-  return escaped
-    .replace(/\r\n?/g, "\n")
-    .split(/\n\s*\n/)
-    .map((paragraph) => `<p>${paragraph.replace(/\n/g, "<br />")}</p>`)
-    .join("");
-}
-
 export function vacancyPayload(values: VacancyFormValues) {
   return {
     title: values.title.trim(),
@@ -72,7 +53,7 @@ export function vacancyPayload(values: VacancyFormValues) {
     closing_date: dateInputToIso(values.closing_date) ?? "",
     location: values.location.trim(),
     is_remote: values.is_remote,
-    description_html: textToDescriptionHtml(values.description),
+    description_html: values.description,
     salary_min: values.salary_min === "" ? null : Number(values.salary_min),
     salary_max: values.salary_max === "" ? null : Number(values.salary_max),
     show_salary: values.show_salary,

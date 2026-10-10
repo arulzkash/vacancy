@@ -13,7 +13,7 @@ import {
 } from "../create-form";
 import { createExperienceLevelLabels } from "../labels";
 import { useCreateVacancy } from "../use-create-vacancy";
-import { FormField, formControlClass } from "./form/form-field";
+import { VacancyDescriptionField } from "./form/vacancy-description-field";
 import { RadioField } from "./form/radio-field";
 import { VacancyInformationFields } from "./form/vacancy-information-fields";
 import { VacancySalaryFields } from "./form/vacancy-salary-fields";
@@ -27,7 +27,6 @@ export function VacancyCreateForm() {
   const router = useRouter();
   const submitting = useRef(false);
   const {
-    register,
     handleSubmit,
     setError,
     clearErrors,
@@ -92,27 +91,9 @@ export function VacancyCreateForm() {
           className="min-w-0 space-y-8"
         >
           <VacancyInformationFields />
-          <FormField
-            id="description"
-            label="Deskripsi"
-            required
-            hint="Anda bisa mengubah templat yang telah disediakan di atas."
-            error={errors.description?.message}
-          >
-            <textarea
-              {...register("description", {
-                required: "Deskripsi wajib diisi.",
-                validate: (value) =>
-                  value.trim() !== "" || "Deskripsi wajib diisi.",
-              })}
-              id="description"
-              aria-required="true"
-              aria-invalid={Boolean(errors.description)}
-              aria-describedby={`description-hint${errors.description ? " description-error" : ""}`}
-              className={`${formControlClass} min-h-[377px] resize-y`}
-              placeholder="Deskripsi pekerjaan…"
-            />
-          </FormField>
+          <VacancyDescriptionField
+            disabled={mutation.isPending || mutation.isSuccess}
+          />
           <VacancySalaryFields />
           <RadioField
             name="experience_level"
