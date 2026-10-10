@@ -5,7 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export function SiteHeader() {
-  const isCreatePage = usePathname() === "/vacancies/create";
+  const pathname = usePathname();
+  const isRecruiterPage =
+    pathname === "/dashboard" || pathname === "/vacancies/create";
   return (
     <header className="border-b border-line bg-white">
       <nav
@@ -27,17 +29,17 @@ export function SiteHeader() {
 
         <Link
           href="/vacancies"
-          aria-current={isCreatePage ? undefined : "page"}
-          className={`flex min-h-[70px] items-center border-b-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4 ${isCreatePage ? "border-transparent" : "border-ink"}`}
+          aria-current={isRecruiterPage ? undefined : "page"}
+          className={`flex min-h-[70px] items-center border-b-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4 ${isRecruiterPage ? "border-transparent" : "border-ink"}`}
         >
           Lowongan Kerja
         </Link>
         <Link
-          href="/vacancies/create"
-          aria-current={isCreatePage ? "page" : undefined}
-          className={`flex min-h-[70px] items-center border-b-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4 ${isCreatePage ? "border-ink" : "border-transparent"}`}
+          href="/dashboard"
+          aria-current={isRecruiterPage ? "page" : undefined}
+          className={`flex min-h-[70px] items-center border-b-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4 ${isRecruiterPage ? "border-ink" : "border-transparent"}`}
         >
-          Buat lowongan
+          Dashboard
         </Link>
       </nav>
     </header>

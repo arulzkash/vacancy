@@ -14,8 +14,10 @@ test("recruiter creates a vacancy and a job seeker can find and open it", async 
   await expect(page.getByRole("article")).toHaveCount(1);
   await page
     .getByRole("navigation")
-    .getByRole("link", { name: "Buat lowongan", exact: true })
+    .getByRole("link", { name: "Dashboard", exact: true })
     .click();
+  await expect(page.getByRole("article")).toHaveCount(4);
+  await page.getByRole("link", { name: "Buat lowongan", exact: true }).click();
   await expect(page).toHaveURL("/vacancies/create");
   await fillForm(page);
 
@@ -43,6 +45,19 @@ test("recruiter creates a vacancy and a job seeker can find and open it", async 
     title,
   );
 
+  // The dashboard shares the invalidated list cache and must also show the new vacancy.
+  await page
+    .getByRole("navigation", { name: "Navigasi utama" })
+    .getByRole("link", { name: "Dashboard", exact: true })
+    .click();
+  await expect(page.getByRole("article")).toHaveCount(5);
+  await expect(
+    page.getByRole("article").first().getByRole("heading"),
+  ).toHaveText(title);
+  await page
+    .getByRole("navigation", { name: "Navigasi utama" })
+    .getByRole("link", { name: "Lowongan Kerja", exact: true })
+    .click();
   await page.getByRole("searchbox").fill(title);
   await expect(page.getByRole("article")).toHaveCount(1);
   await page.getByRole("link", { name: title, exact: true }).click();

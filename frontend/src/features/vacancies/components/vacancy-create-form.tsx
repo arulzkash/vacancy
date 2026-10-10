@@ -116,7 +116,7 @@ export function VacancyCreateForm() {
             {busy ? "Menyimpan…" : "Buat lowongan"}
           </button>
           <Link
-            href="/vacancies"
+            href="/dashboard"
             className="inline-flex h-10 items-center rounded-sm border border-line px-4 text-base text-ink hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-4"
           >
             Batal
