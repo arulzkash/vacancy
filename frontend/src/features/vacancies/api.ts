@@ -65,3 +65,34 @@ export async function getVacancy(
 
   return payload.data;
 }
+
+// The edit response includes stored salaries even when hidden from job seekers.
+export async function getVacancyForEdit(
+  id: number,
+  signal?: AbortSignal,
+): Promise<VacancyDetail> {
+  const response = await fetch(
+    new URL(`/api/vacancies/${id}/edit`, API_BASE_URL),
+    {
+      signal,
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+    },
+  );
+
+  if (!response.ok) {
+    throw new ApiError(
+      "Lowongan yang akan diedit belum dapat dimuat.",
+      response.status,
+    );
+  }
+
+  const payload: VacancyDetailResponse = await response.json();
+  if (
+    payload.data?.id !== id ||
+    typeof payload.data.description_html !== "string"
+  ) {
+    throw new Error("Respons form edit tidak sesuai format.");
+  }
+  return payload.data;
+}

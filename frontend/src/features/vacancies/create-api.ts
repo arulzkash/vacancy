@@ -12,8 +12,23 @@ export class VacancyValidationError extends ApiError {
 export async function createVacancy(
   payload: ReturnType<typeof vacancyPayload>,
 ): Promise<VacancyDetail> {
-  const response = await fetch(new URL("/api/vacancies", API_BASE_URL), {
-    method: "POST",
+  return saveVacancy("/api/vacancies", "POST", payload);
+}
+
+export async function updateVacancy(
+  id: number,
+  payload: ReturnType<typeof vacancyPayload>,
+): Promise<VacancyDetail> {
+  return saveVacancy(`/api/vacancies/${id}`, "PUT", payload);
+}
+
+async function saveVacancy(
+  path: string,
+  method: "POST" | "PUT",
+  payload: ReturnType<typeof vacancyPayload>,
+): Promise<VacancyDetail> {
+  const response = await fetch(new URL(path, API_BASE_URL), {
+    method,
     headers: { Accept: "application/json", "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
@@ -32,7 +47,7 @@ export async function createVacancy(
 
   const result: VacancyDetailResponse = await response.json();
   if (typeof result.data?.id !== "number") {
-    throw new Error("Respons pembuatan lowongan tidak sesuai format.");
+    throw new Error("Respons penyimpanan lowongan tidak sesuai format.");
   }
   return result.data;
 }

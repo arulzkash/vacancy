@@ -7,7 +7,9 @@ import { usePathname } from "next/navigation";
 export function SiteHeader() {
   const pathname = usePathname();
   const isRecruiterPage =
-    pathname === "/dashboard" || pathname === "/vacancies/create";
+    pathname === "/dashboard" ||
+    pathname === "/vacancies/create" ||
+    /^\/vacancies\/\d+\/edit$/.test(pathname);
   return (
     <header className="border-b border-line bg-white">
       <nav

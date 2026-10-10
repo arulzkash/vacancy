@@ -1,4 +1,4 @@
-import type { EmploymentType, ExperienceLevel } from "./types";
+import type { EmploymentType, ExperienceLevel, VacancyDetail } from "./types";
 import { descriptionTemplate } from "./description-content";
 
 export type VacancyFormValues = {
@@ -89,4 +89,21 @@ export function dateInputToIso(value: string): string | null {
 
 export function isoToDateInput(value: string): string {
   return value ? value.split("-").reverse().join("/") : "";
+}
+
+export function vacancyFormValues(vacancy: VacancyDetail): VacancyFormValues {
+  return {
+    title: vacancy.title,
+    position: vacancy.position,
+    employment_type: vacancy.employment_type,
+    candidate_count: String(vacancy.candidate_count),
+    closing_date: isoToDateInput(vacancy.closing_date),
+    location: vacancy.location,
+    is_remote: vacancy.is_remote,
+    description: vacancy.description_html,
+    salary_min: vacancy.salary_min === null ? "" : String(vacancy.salary_min),
+    salary_max: vacancy.salary_max === null ? "" : String(vacancy.salary_max),
+    show_salary: vacancy.show_salary,
+    experience_level: vacancy.experience_level,
+  };
 }

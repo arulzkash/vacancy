@@ -54,15 +54,13 @@ export function DashboardVacancyCard({ vacancy }: { vacancy: Vacancy }) {
           className="mt-6 flex gap-3"
           aria-label={`Aksi untuk ${vacancy.title}`}
         >
-          <button
-            type="button"
-            disabled
-            title="Fitur edit belum tersedia"
-            className="inline-flex min-h-9 items-center gap-2 rounded-sm bg-zinc-100 px-3 text-sm text-zinc-600 disabled:cursor-not-allowed"
+          <Link
+            href={`/vacancies/${vacancy.id}/edit`}
+            className="inline-flex min-h-9 items-center gap-2 rounded-sm bg-zinc-100 px-3 text-sm text-zinc-600 hover:bg-zinc-200 focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             <DashboardIcon name="edit" className="size-4 text-zinc-700" />
             Edit
-          </button>
+          </Link>
           <button
             type="button"
             disabled

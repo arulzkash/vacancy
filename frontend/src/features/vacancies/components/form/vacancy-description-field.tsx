@@ -4,7 +4,13 @@ import type { VacancyFormValues } from "../../create-form";
 import { DescriptionEditor } from "../editor/description-editor";
 import { FormField } from "./form-field";
 
-export function VacancyDescriptionField({ disabled }: { disabled: boolean }) {
+export function VacancyDescriptionField({
+  disabled,
+  hint = "Anda bisa mengubah templat yang telah disediakan di atas.",
+}: {
+  disabled: boolean;
+  hint?: string;
+}) {
   const { control } = useFormContext<VacancyFormValues>();
   const {
     field,
@@ -23,7 +29,7 @@ export function VacancyDescriptionField({ disabled }: { disabled: boolean }) {
       id="description"
       label="Deskripsi"
       required
-      hint="Anda bisa mengubah templat yang telah disediakan di atas."
+      hint={hint}
       error={error?.message}
     >
       <DescriptionEditor

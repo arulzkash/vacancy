@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 const apiUrl = "http://127.0.0.1:8001/api/vacancies";
 
-test("dashboard renders API vacancies in order with dates and disabled actions", async ({
+test("dashboard renders API vacancies in order with dates and edit navigation", async ({
   page,
   request,
 }) => {
@@ -39,13 +39,16 @@ test("dashboard renders API vacancies in order with dates and disabled actions",
       vacancy.closing_date,
     );
     await expect(
-      card.getByRole("button", { name: "Edit", exact: true }),
-    ).toBeDisabled();
+      card.getByRole("link", { name: "Edit", exact: true }),
+    ).toHaveAttribute("href", `/vacancies/${vacancy.id}/edit`);
     await expect(
       card.getByRole("button", { name: "Hapus", exact: true }),
     ).toBeDisabled();
   }
-  await cards.first().getByRole("link").click();
+  await cards
+    .first()
+    .getByRole("link", { name: data[0].title, exact: true })
+    .click();
   await expect(page).toHaveURL(`/vacancies/${data[0].id}`);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     data[0].title,

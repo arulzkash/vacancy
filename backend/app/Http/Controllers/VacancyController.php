@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ListVacanciesRequest;
 use App\Http\Requests\StoreVacancyRequest;
+use App\Http\Requests\UpdateVacancyRequest;
 use App\Http\Resources\VacancyDetailResource;
+use App\Http\Resources\VacancyEditResource;
 use App\Http\Resources\VacancyResource;
 use App\Models\Vacancy;
 use App\Support\HtmlSanitizer;
@@ -21,6 +23,22 @@ class VacancyController extends Controller
         return (new VacancyDetailResource($vacancy, $vacancy->description_html))
             ->response()
             ->setStatusCode(201);
+    }
+
+    public function edit(Vacancy $vacancy, HtmlSanitizer $sanitizer): VacancyEditResource
+    {
+        return new VacancyEditResource(
+            $vacancy,
+            $sanitizer->sanitize($vacancy->description_html),
+        );
+    }
+
+    public function update(UpdateVacancyRequest $request, Vacancy $vacancy): VacancyDetailResource
+    {
+        $vacancy->update($request->validated());
+        $vacancy->refresh();
+
+        return new VacancyDetailResource($vacancy, $vacancy->description_html);
     }
 
     public function index(ListVacanciesRequest $request): AnonymousResourceCollection

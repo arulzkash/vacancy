@@ -1,17 +1,30 @@
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import type { VacancyFormValues } from "../../create-form";
 import { formControlClass } from "./form-field";
 
-export function VacancySalaryFields() {
+export function VacancySalaryFields({
+  requireMinimum = true,
+}: {
+  requireMinimum?: boolean;
+}) {
   const {
     register,
+    control,
     getValues,
     formState: { errors },
   } = useFormContext<VacancyFormValues>();
 
+  const [showSalary, salaryMax] = useWatch({
+    control,
+    name: ["show_salary", "salary_max"],
+  });
+  const minimumRequired = requireMinimum || showSalary || salaryMax !== "";
+
   function validateSalary(name: "salary_min" | "salary_max", value: string) {
     if (value === "")
-      return name === "salary_max" || "Gaji minimum wajib diisi.";
+      return (
+        name === "salary_max" || !minimumRequired || "Gaji minimum wajib diisi."
+      );
     if (!Number.isSafeInteger(Number(value)) || Number(value) < 0)
       return "Gaji harus bilangan bulat nonnegatif.";
     if (
@@ -27,9 +40,11 @@ export function VacancySalaryFields() {
       <fieldset aria-describedby="salary-hint">
         <legend className="mb-2 text-base leading-[22px]">
           Rentang gaji per bulan{" "}
-          <span aria-hidden="true" className="text-red-600">
-            *
-          </span>
+          {minimumRequired && (
+            <span aria-hidden="true" className="text-red-600">
+              *
+            </span>
+          )}
         </legend>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_32px_1fr] sm:items-start">
           {(["salary_min", "salary_max"] as const).map((name, index) => (
@@ -56,7 +71,7 @@ export function VacancySalaryFields() {
                   aria-label={
                     name === "salary_min" ? "Gaji minimum" : "Gaji maksimum"
                   }
-                  aria-required={name === "salary_min"}
+                  aria-required={name === "salary_min" && minimumRequired}
                   aria-invalid={Boolean(errors[name])}
                   aria-describedby={`salary-hint${errors[name] ? ` ${name}-error` : ""}`}
                   type="number"
