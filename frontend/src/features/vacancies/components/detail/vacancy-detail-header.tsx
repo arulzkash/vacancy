@@ -47,17 +47,17 @@ export function VacancyDetailHeader({
             </p>
 
             <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-xs leading-4 text-muted">
-              <span className="inline-flex items-center gap-1">
+              <span className="inline-flex min-w-0 max-w-full items-center gap-1">
                 <CompanyIcon className="size-3.5 shrink-0" />
-                <span className="break-words">{vacancy.company.name}</span>
+                <span className="min-w-0 break-words">{vacancy.company.name}</span>
               </span>
-              <span className="inline-flex items-center gap-1">
+              <span className="inline-flex min-w-0 max-w-full items-center gap-1">
                 <LocationIcon className="size-3.5 shrink-0" />
-                <span className="break-words">{location}</span>
+                <span className="min-w-0 break-words">{location}</span>
               </span>
-              <span className="inline-flex items-center gap-1">
+              <span className="inline-flex min-w-0 max-w-full items-center gap-1">
                 <EmployeesIcon className="size-3.5 shrink-0" />
-                <span className="break-words">
+                <span className="min-w-0 break-words">
                   {vacancy.company.employee_range} Karyawan
                 </span>
               </span>

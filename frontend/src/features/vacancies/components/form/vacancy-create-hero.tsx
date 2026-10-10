@@ -11,7 +11,8 @@ export function VacancyCreateHero({ editing = false }: { editing?: boolean }) {
             alt=""
             width={203}
             height={61}
-            className="h-[61px] w-[203px] rounded-full"
+            loading="eager"
+            className="h-auto w-[203px] rounded-full"
           />
         </h1>
         <p className="mt-4 text-base leading-[22px] text-white">

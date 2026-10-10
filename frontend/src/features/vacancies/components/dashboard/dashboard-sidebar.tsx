@@ -8,13 +8,15 @@ export function DashboardSidebar() {
       aria-label="Menu dashboard"
       className="border-b border-line md:border-b-0 md:border-r"
     >
-      <Image
-        src="/images/dashboard-jobs.png"
-        alt="Jobs"
-        width={252}
-        height={92}
-        className="h-auto w-[252px] max-w-full"
-      />
+      <div className="relative aspect-[252/92] w-full max-w-[252px]">
+        <Image
+          src="/images/dashboard-jobs.png"
+          alt="Jobs"
+          fill
+          sizes="252px"
+          loading="eager"
+        />
+      </div>
       <Link
         href="/dashboard"
         aria-current="page"

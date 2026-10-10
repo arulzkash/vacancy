@@ -17,7 +17,7 @@ export function DashboardVacancyCard({
   return (
     <article
       aria-labelledby={titleId}
-      className="flex gap-4 rounded-sm border border-line bg-white p-4"
+      className="flex gap-4 rounded-lg border border-line bg-white p-4"
     >
       <Image
         src="/images/jobs-company.svg"
@@ -64,7 +64,7 @@ export function DashboardVacancyCard({
         >
           <Link
             href={`/vacancies/${vacancy.id}/edit`}
-            className="inline-flex min-h-9 items-center gap-2 rounded-sm bg-zinc-100 px-3 text-sm text-zinc-600 hover:bg-zinc-200 focus-visible:outline-2 focus-visible:outline-offset-2"
+            className="inline-flex min-h-9 items-center gap-2 rounded-sm border border-line bg-surface px-3 text-base text-zinc-600 hover:bg-zinc-200 focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             <DashboardIcon name="edit" className="size-4 text-zinc-700" />
             Edit
@@ -73,7 +73,7 @@ export function DashboardVacancyCard({
             type="button"
             id={`delete-vacancy-${vacancy.id}`}
             onClick={() => onDelete(vacancy)}
-            className="inline-flex min-h-9 items-center gap-2 rounded-sm bg-rose-100 px-3 text-sm text-rose-700 hover:bg-rose-200 focus-visible:outline-2 focus-visible:outline-offset-2"
+            className="inline-flex min-h-9 items-center gap-2 rounded-sm bg-rose-200 px-3 text-base text-rose-700 hover:bg-rose-200 focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             <DashboardIcon name="delete" className="size-4" />
             Hapus

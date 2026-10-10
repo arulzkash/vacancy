@@ -4,6 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+function navigationLinkClassName(isActive: boolean) {
+  return [
+    "relative flex min-h-[70px] items-center whitespace-nowrap",
+    "text-sm sm:text-base focus-visible:outline-2 focus-visible:outline-offset-4",
+    isActive
+      ? "after:absolute after:bottom-[14px] after:left-1/2 after:h-1 after:w-5 after:-translate-x-1/2 after:bg-ink"
+      : "",
+  ].join(" ");
+}
+
 export function SiteHeader() {
   const pathname = usePathname();
   const isRecruiterPage =
@@ -32,14 +42,14 @@ export function SiteHeader() {
         <Link
           href="/vacancies"
           aria-current={isRecruiterPage ? undefined : "page"}
-          className={`flex min-h-[70px] items-center border-b-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4 ${isRecruiterPage ? "border-transparent" : "border-ink"}`}
+          className={navigationLinkClassName(!isRecruiterPage)}
         >
           Lowongan Kerja
         </Link>
         <Link
           href="/dashboard"
           aria-current={isRecruiterPage ? "page" : undefined}
-          className={`flex min-h-[70px] items-center border-b-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4 ${isRecruiterPage ? "border-ink" : "border-transparent"}`}
+          className={navigationLinkClassName(isRecruiterPage)}
         >
           Dashboard
         </Link>

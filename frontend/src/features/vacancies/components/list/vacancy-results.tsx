@@ -11,7 +11,7 @@ export function VacancyResults() {
   return (
     <>
       <VacancyCreatedNotice />
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h2
           id="vacancies-heading"
           className="text-xl font-semibold leading-8 sm:text-2xl"

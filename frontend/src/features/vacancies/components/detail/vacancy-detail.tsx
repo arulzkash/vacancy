@@ -49,7 +49,7 @@ export function VacancyDetail({ id, backHref }: VacancyDetailProps) {
     <>
       <VacancyDetailHeader vacancy={data} backHref={backHref} />
 
-      <div className="mx-auto w-full max-w-[770px] px-5 pb-16 pt-11">
+      <div className="mx-auto w-full max-w-[770px] px-5 pb-16 pt-8">
         {isError && (
           <div className="mb-6">
             <VacancyDetailError

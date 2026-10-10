@@ -59,7 +59,7 @@ export function DashboardVacancies() {
         </h1>
         <Link
           href="/vacancies/create"
-          className="inline-flex min-h-9 items-center gap-2 rounded-sm bg-brand-navy px-3 text-sm text-white hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-4"
+          className="inline-flex min-h-9 items-center gap-2 rounded-sm bg-brand-navy px-3 text-base text-white hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-4"
         >
           <DashboardIcon name="plus" className="size-4" />
           Buat lowongan

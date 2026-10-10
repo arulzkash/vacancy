@@ -3,7 +3,7 @@ import Image from "next/image";
 export function VacanciesHero() {
   return (
     <section className="bg-ink text-white">
-      <div className="mx-auto min-h-[262px] max-w-[1160px] px-5 py-12">
+      <div className="mx-auto min-h-[262px] max-w-[1150px] px-5 py-12">
         <p className="text-lg font-medium text-accent">Dicoding Jobs</p>
 
         <h1 className="mt-4 text-3xl font-semibold leading-[1.5] tracking-tight sm:text-[40px] sm:leading-[64px]">
@@ -15,7 +15,8 @@ export function VacanciesHero() {
               alt=""
               width={203}
               height={61}
-              className="h-[61px] w-[203px] rounded-full"
+              loading="eager"
+              className="h-auto w-[203px] rounded-full"
             />
           </span>
         </h1>
