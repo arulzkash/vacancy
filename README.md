@@ -131,6 +131,8 @@ The list and retry recovery use the actual Laravel API. Empty and error scenario
 
 Search tests cover the 300 ms debounce, trimming and capitalization, clearing the keyword, direct URLs and reloads, empty results, Enter submission, retry, and cancellation of an older request when a newer search starts. The debounce test controls browser time; the other search flows use the actual API.
 
+Detail tests cover the complete list → search → card → detail → back flow with the actual API, browser back, direct URLs and reloads, company metadata, description content, loading, missing and invalid IDs, network/server errors with retry, mobile overflow, and footer spacing for short descriptions. Loading requests are held until the pending state is checked. A rich-text scenario intercepts the detail response to verify headings, emphasis, lists, and links without changing stored records; HTML sanitization is covered by the backend tests.
+
 Playwright starts its own backend on port **8001** and frontend on port **3001**. These ports must be available. The regular development servers can remain running on ports 8000 and 3000.
 
 Use `npm run test:e2e:ui` for interactive tests or `npx playwright show-report` to open the HTML report.
