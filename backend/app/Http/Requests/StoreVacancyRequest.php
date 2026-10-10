@@ -59,8 +59,6 @@ class StoreVacancyRequest extends FormRequest
             ],
             'salary_max' => [
                 'nullable',
-                'required_if:show_salary,true',
-                'required_with:salary_min',
                 'integer',
                 'min:0',
                 'max:'.PHP_INT_MAX,

@@ -78,7 +78,7 @@ class VacancyCreateTest extends TestCase
         return array_map(fn (string $field) => [$field], [
             'title', 'position', 'employment_type', 'candidate_count',
             'closing_date', 'location', 'description_html', 'experience_level',
-            'salary_min', 'salary_max',
+            'salary_min',
         ]);
     }
 
@@ -171,18 +171,31 @@ class VacancyCreateTest extends TestCase
         $this->getJson('/api/vacancies/'.$id)->assertJsonPath('data.salary_max', null);
     }
 
-    public function test_salary_range_requires_both_amounts_even_when_hidden(): void
+    public function test_salary_maximum_requires_a_minimum_even_when_hidden(): void
     {
-        foreach (['salary_min', 'salary_max'] as $field) {
-            $payload = array_replace($this->validPayload(), ['show_salary' => false]);
-            unset($payload[$field]);
+        $payload = array_replace($this->validPayload(), ['show_salary' => false]);
+        unset($payload['salary_min']);
 
-            $this->postJson('/api/vacancies', $payload)
-                ->assertUnprocessable()
-                ->assertJsonValidationErrors($field);
-        }
+        $this->postJson('/api/vacancies', $payload)
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('salary_min');
 
         $this->assertDatabaseCount('vacancies', 0);
+    }
+
+    public function test_base_salary_can_be_created_without_a_maximum(): void
+    {
+        $payload = $this->validPayload();
+        unset($payload['salary_max']);
+
+        $response = $this->postJson('/api/vacancies', $payload)
+            ->assertCreated()
+            ->assertJsonPath('data.salary_min', 5_000_000)
+            ->assertJsonPath('data.salary_max', null);
+        $id = $response->json('data.id');
+        $this->getJson('/api/vacancies')->assertJsonPath('data.0.salary_max', null);
+        $this->getJson('/api/vacancies/'.$id)->assertJsonPath('data.salary_min', 5_000_000);
+        $this->assertDatabaseHas('vacancies', ['id' => $id, 'salary_max' => null]);
     }
 
     public function test_visible_equal_zero_salary_is_valid(): void

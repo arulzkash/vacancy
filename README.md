@@ -62,6 +62,10 @@ Use the search field to find part of a vacancy title. Searches run 300 ms after 
 
 Click a vacancy card to open `/vacancies/{id}`. The detail page loads its description and metadata from the API, including experience and candidate count. The back link restores the search keyword. Detail pages include a loading skeleton, a not-found message, and retry for request failures. Description lengths depend on the database content; the sample records contain brief descriptions.
 
+Use **Buat lowongan** in the navigation to open `/vacancies/create`. Fill in the title, position, employment type, candidate count, closing date, location, description, and experience level. Position and location provide native combobox suggestions and also accept custom text. The form requires a minimum salary. The maximum is optional for a base salary. Use the salary visibility switch to control whether candidates can see it. Enter the active-until date as DD/MM/YYYY or use the calendar button; the API receives YYYY-MM-DD. The description starts with an editable plain-text template.
+
+The form uses React Hook Form and a TanStack Query mutation. While the request is pending, fields and the submit button are disabled. Validation errors appear beside their fields, and failed requests preserve the current input. A successful submission invalidates all list queries and redirects to `/vacancies?created=1`, with an empty search and a success message. Descriptions currently use a plain-text textarea: text is HTML-escaped, paragraphs are separated by blank lines, and single newlines become line breaks. Rich-text editing is not yet available.
+
 ## Configuration
 
 | File | Variable | Default |
@@ -99,7 +103,7 @@ The detail response sanitizes description HTML with HTMLPurifier. Paragraphs, li
 | `experience_level` | Required: `less_than_1`, `1_3`, `4_5`, `6_10`, or `more_than_10`. |
 | `description_html` | Required string. Sanitized before validation and storage, up to 65,535 characters after sanitization, with nonempty text. Empty editor paragraphs, whitespace, invisible characters, and markup that becomes empty after sanitization are rejected. |
 | `is_remote`, `show_salary` | Optional booleans, defaulting to `false`; Laravel also accepts `0`, `1`, `"0"`, and `"1"`. |
-| `salary_min`, `salary_max` | Nullable nonnegative integers within PHP's integer range. Both are required when `show_salary` is true or when either amount is supplied. The maximum must be greater than or equal to the minimum. Equal amounts, including zero, are valid. |
+| `salary_min`, `salary_max` | Nullable nonnegative integers within PHP's integer range. The minimum is required when `show_salary` is true or a maximum is supplied. The maximum is optional for a base salary. The maximum must be greater than or equal to the minimum. Equal amounts, including zero, are valid. |
 
 Hidden salary amounts may be stored but remain `null` in create, list, and detail responses. Company metadata comes from backend configuration. Extra fields, including client-supplied IDs, timestamps, and company metadata, are ignored; only validated vacancy fields are stored.
 
@@ -179,6 +183,8 @@ The list and retry recovery use the actual Laravel API. Empty and error scenario
 Search tests cover the 300 ms debounce, trimming and capitalization, clearing the keyword, direct URLs and reloads, empty results, Enter submission, retry, and cancellation of an older request when a newer search starts. The debounce test controls browser time; the other search flows use the actual API.
 
 Detail tests cover the complete list → search → card → detail → back flow with the actual API, browser back, direct URLs and reloads, company metadata, description content, loading, missing and invalid IDs, network/server errors with retry, mobile overflow, and footer spacing for short descriptions. Loading requests are held until the pending state is checked. A rich-text scenario intercepts the detail response to verify headings, emphasis, lists, and links without changing stored records; HTML sanitization is covered by the backend tests.
+
+Create tests submit the complete form to the actual API, verify list-cache refresh and an empty search on return, then search for and open the new vacancy. They also cover escaped description text, required-field and salary validation, field-level HTTP 422 errors, network/server failures, prevention of duplicate submissions, and mobile overflow. An automatic fixture removes only the IDs created by each test from `backend/database/e2e.sqlite`, preserving the four seeded samples and the development database.
 
 Playwright starts its own backend on port **8001** and frontend on port **3001**. These ports must be available. The regular development servers can remain running on ports 8000 and 3000.
 

@@ -1,9 +1,25 @@
+"use client";
+
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export function SiteFooter() {
+  const isCreatePage = usePathname() === "/vacancies/create";
   return (
-    <footer className="mx-auto w-full max-w-[1160px] px-5">
-      <div className="border-t border-line py-12 sm:pb-24 sm:pt-16">
+    <footer
+      className={
+        isCreatePage
+          ? "w-full border-t border-line"
+          : "mx-auto w-full max-w-[1160px] px-5"
+      }
+    >
+      <div
+        className={
+          isCreatePage
+            ? "mx-auto max-w-[1150px] px-5 py-12 sm:pb-24 sm:pt-16"
+            : "border-t border-line py-12 sm:pb-24 sm:pt-16"
+        }
+      >
         <Image
           src="/images/dicoding.svg"
           alt="Dicoding"
