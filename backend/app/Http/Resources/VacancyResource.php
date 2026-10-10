@@ -20,6 +20,8 @@ class VacancyResource extends JsonResource
             'position' => $vacancy->position,
             'company' => [
                 'name' => config('company.name'),
+                'business_sector' => config('company.business_sector'),
+                'employee_range' => config('company.employee_range'),
             ],
             'employment_type' => $vacancy->employment_type->value,
             'candidate_count' => $vacancy->candidate_count,

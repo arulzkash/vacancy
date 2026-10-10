@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import {
   CompanyIcon,
@@ -11,6 +12,7 @@ import type { Vacancy } from "../types";
 
 type JobCardProps = {
   vacancy: Vacancy;
+  href: string;
 };
 
 type MetadataItemProps = {
@@ -27,70 +29,73 @@ function MetadataItem({ icon, children }: MetadataItemProps) {
   );
 }
 
-export function JobCard({ vacancy }: JobCardProps) {
+export function JobCard({ vacancy, href }: JobCardProps) {
   const titleId = `vacancy-title-${vacancy.id}`;
   const locationLabel = vacancy.is_remote
     ? `${vacancy.location} (Remote)`
     : vacancy.location;
 
   return (
-    <article
-      aria-labelledby={titleId}
-      className="flex flex-col gap-4 rounded-sm border border-line bg-white p-4 sm:flex-row sm:items-start sm:justify-between"
-    >
-      <div className="flex min-w-0 flex-1 gap-4">
-        <Image
-          src="/images/dicoding-company.png"
-          alt=""
-          width={96}
-          height={96}
-          className="size-20 shrink-0 rounded-sm sm:size-24"
-        />
+    <article aria-labelledby={titleId}>
+      <Link
+        href={href}
+        aria-labelledby={titleId}
+        className="flex flex-col gap-4 rounded-sm border border-line bg-white p-4 hover:border-muted focus-visible:outline-2 focus-visible:outline-offset-4 sm:flex-row sm:items-start sm:justify-between"
+      >
+        <div className="flex min-w-0 flex-1 gap-4">
+          <Image
+            src="/images/dicoding-company.png"
+            alt=""
+            width={96}
+            height={96}
+            className="size-20 shrink-0 rounded-sm sm:size-24"
+          />
 
-        <div className="min-w-0 py-0.5">
-          <h3
-            id={titleId}
-            className="break-words text-base font-semibold leading-6"
-          >
-            {vacancy.title}
-          </h3>
+          <div className="min-w-0 py-0.5">
+            <h3
+              id={titleId}
+              className="break-words text-base font-semibold leading-6"
+            >
+              {vacancy.title}
+            </h3>
 
-          <div className="mt-3 flex flex-wrap gap-x-3 gap-y-2 text-xs leading-5 text-muted">
-            <MetadataItem icon={<CompanyIcon />}>
-              {vacancy.company.name}
-            </MetadataItem>
-            <span>{employmentTypeLabels[vacancy.employment_type]}</span>
+            <div className="mt-3 flex flex-wrap gap-x-3 gap-y-2 text-xs leading-5 text-muted">
+              <MetadataItem icon={<CompanyIcon />}>
+                {vacancy.company.name}
+              </MetadataItem>
+              <span>{employmentTypeLabels[vacancy.employment_type]}</span>
+            </div>
+
+            <div className="mt-1 flex flex-wrap gap-x-3 gap-y-2 text-xs leading-5 text-muted">
+              <MetadataItem icon={<LocationIcon />}>
+                {locationLabel}
+              </MetadataItem>
+              <MetadataItem icon={<ExperienceIcon />}>
+                {experienceLevelLabels[vacancy.experience_level]}
+              </MetadataItem>
+            </div>
           </div>
+        </div>
 
-          <div className="mt-1 flex flex-wrap gap-x-3 gap-y-2 text-xs leading-5 text-muted">
-            <MetadataItem icon={<LocationIcon />}>
-              {locationLabel}
-            </MetadataItem>
-            <MetadataItem icon={<ExperienceIcon />}>
-              {experienceLevelLabels[vacancy.experience_level]}
-            </MetadataItem>
+        <dl className="flex shrink-0 flex-col gap-2 border-t border-line pt-3 text-xs leading-5 text-muted sm:border-0 sm:pt-0 sm:text-right">
+          <div className="flex flex-wrap gap-x-1 sm:justify-end">
+            <dt>Dibuat pada</dt>
+            <dd>
+              <time dateTime={vacancy.created_at}>
+                {formatPublishedDate(vacancy.created_at)}
+              </time>
+            </dd>
           </div>
-        </div>
-      </div>
-
-      <dl className="flex shrink-0 flex-col gap-2 border-t border-line pt-3 text-xs leading-5 text-muted sm:border-0 sm:pt-0 sm:text-right">
-        <div className="flex flex-wrap gap-x-1 sm:justify-end">
-          <dt>Dibuat pada</dt>
-          <dd>
-            <time dateTime={vacancy.created_at}>
-              {formatPublishedDate(vacancy.created_at)}
-            </time>
-          </dd>
-        </div>
-        <div className="flex flex-wrap gap-x-1 sm:justify-end">
-          <dt>Lamar sebelum</dt>
-          <dd>
-            <time dateTime={vacancy.closing_date}>
-              {formatClosingDate(vacancy.closing_date)}
-            </time>
-          </dd>
-        </div>
-      </dl>
+          <div className="flex flex-wrap gap-x-1 sm:justify-end">
+            <dt>Lamar sebelum</dt>
+            <dd>
+              <time dateTime={vacancy.closing_date}>
+                {formatClosingDate(vacancy.closing_date)}
+              </time>
+            </dd>
+          </div>
+        </dl>
+      </Link>
     </article>
   );
 }

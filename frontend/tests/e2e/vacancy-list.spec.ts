@@ -100,8 +100,12 @@ test("homepage redirects and renders seeded vacancies from the actual API", asyn
     );
   }
 
-  // Detail navigation is not available yet, and list cards omit salary by design.
-  await expect(page.getByRole("article").getByRole("link")).toHaveCount(0);
+  // Each card links to its own detail; list cards omit salary by design.
+  await expect(page.getByRole("article").getByRole("link")).toHaveCount(4);
+  for (const vacancy of payload.data) {
+    await expect(page.getByRole("link", { name: vacancy.title, exact: true }))
+      .toHaveAttribute("href", `/vacancies/${vacancy.id}`);
+  }
   await expect(page.getByRole("article").filter({ hasText: /Rp\s*[\d.]/ })).toHaveCount(0);
   const hiddenSalary = payload.data.find((vacancy) => vacancy.title === "Android Developer");
   expect(hiddenSalary?.show_salary).toBe(false);

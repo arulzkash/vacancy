@@ -39,7 +39,11 @@ class VacancyDetailTest extends TestCase
                     'id' => $vacancy->id,
                     'title' => 'Product Engineer — Learning Platform',
                     'position' => 'Product Engineer',
-                    'company' => ['name' => 'Dicoding Indonesia'],
+                    'company' => [
+                        'name' => 'Dicoding Indonesia',
+                        'business_sector' => 'Technology',
+                        'employee_range' => '50–100',
+                    ],
                     'employment_type' => 'part-time',
                     'candidate_count' => 2,
                     'closing_date' => '2026-11-09',

@@ -60,6 +60,8 @@ The homepage redirects to `/vacancies`, where vacancy cards are loaded from the 
 
 Use the search field to find part of a vacancy title. Searches run 300 ms after typing stops; pressing Enter searches immediately. Surrounding spaces are trimmed, and clearing the field restores the complete list. The keyword is stored as `search` in the URL, so `/vacancies?search=Developer` can be opened directly or shared. Searches replace the current history entry without reloading or scrolling the page.
 
+Click a vacancy card to open `/vacancies/{id}`. The detail page loads its description and metadata from the API, including experience and candidate count. The back link restores the search keyword. Detail pages include a loading skeleton, a not-found message, and retry for request failures. Description lengths depend on the database content; the sample records contain brief descriptions.
+
 ## Configuration
 
 | File | Variable | Default |
@@ -78,7 +80,7 @@ Local environment files and SQLite databases are excluded from Git. The setup co
 
 The optional `search` query parameter filters by part of the title, ignoring capitalization for ASCII letters. Empty or whitespace-only keywords return all vacancies. `%`, `_`, and `!` are treated as literal characters. SQLite's default `LIKE` behavior does not perform Unicode case folding. The parameter must be a string of at most 255 characters; invalid parameters return HTTP 422 with validation errors.
 
-Each item contains its title, position, company name, employment type, candidate count, closing date, location, remote flag, experience level, salary visibility, salary range, and timestamps. Closing dates use `YYYY-MM-DD`; timestamps use ISO 8601 in UTC. Descriptions are excluded from the list response. When `show_salary` is `false`, `salary_min` and `salary_max` are always `null`.
+Each item contains its title, position, company metadata, employment type, candidate count, closing date, location, remote flag, experience level, salary visibility, salary range, and timestamps. The `company` object includes `name`, `business_sector`, and `employee_range`, configured in `backend/config/company.php` for the single-company application. The employee range describes company size; it is separate from the vacancy's candidate count. Closing dates use `YYYY-MM-DD`; timestamps use ISO 8601 in UTC. Descriptions are excluded from the list response. When `show_salary` is `false`, `salary_min` and `salary_max` are always `null`.
 
 `GET /api/vacancies/{id}` returns one vacancy in a `data` object with the same public fields and an additional `description_html` field. Missing IDs and nonnumeric IDs return HTTP 404. Expired vacancies remain accessible through the detail endpoint.
 

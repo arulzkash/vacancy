@@ -38,6 +38,8 @@ class VacancyListTest extends TestCase
                         'position' => 'Product Engineer',
                         'company' => [
                             'name' => 'Dicoding Indonesia',
+                            'business_sector' => 'Technology',
+                            'employee_range' => '50–100',
                         ],
                         'employment_type' => 'part-time',
                         'candidate_count' => 2,
@@ -142,15 +144,21 @@ class VacancyListTest extends TestCase
             ->assertJsonPath('data.0.salary_max', 0);
     }
 
-    public function test_company_name_comes_from_configuration(): void
+    public function test_company_metadata_comes_from_configuration(): void
     {
-        config(['company.name' => 'Configured Company']);
+        config([
+            'company.name' => 'Configured Company',
+            'company.business_sector' => 'Education',
+            'company.employee_range' => '100–500',
+        ]);
 
         Vacancy::factory()->create();
 
         $this->getJson('/api/vacancies')
             ->assertOk()
-            ->assertJsonPath('data.0.company.name', 'Configured Company');
+            ->assertJsonPath('data.0.company.name', 'Configured Company')
+            ->assertJsonPath('data.0.company.business_sector', 'Education')
+            ->assertJsonPath('data.0.company.employee_range', '100–500');
     }
 
     public function test_expired_vacancies_remain_in_the_list(): void

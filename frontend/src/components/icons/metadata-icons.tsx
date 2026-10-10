@@ -42,6 +42,26 @@ export function LocationIcon({ className }: IconProps) {
   );
 }
 
+export function EmployeesIcon({ className }: IconProps) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="9" cy="8" r="3" />
+      <path d="M3 21v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 21v-2a6 6 0 0 0-4-5.65" />
+    </svg>
+  );
+}
+
 export function ExperienceIcon({ className }: IconProps) {
   return (
     <svg

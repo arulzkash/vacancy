@@ -17,6 +17,8 @@ export type Vacancy = {
   position: string;
   company: {
     name: string;
+    business_sector: string;
+    employee_range: string;
   };
   employment_type: EmploymentType;
   candidate_count: number;
@@ -33,4 +35,12 @@ export type Vacancy = {
 
 export type VacancyListResponse = {
   data: Vacancy[];
+};
+
+export type VacancyDetail = Vacancy & {
+  description_html: string;
+};
+
+export type VacancyDetailResponse = {
+  data: VacancyDetail;
 };

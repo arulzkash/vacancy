@@ -1,6 +1,7 @@
 "use client";
 
 import { useVacancies } from "../use-vacancies";
+import { vacancyDetailHref } from "../links";
 import { JobCard } from "./job-card";
 import { VacancyListEmpty } from "./vacancy-list-empty";
 import { VacancyListError } from "./vacancy-list-error";
@@ -41,7 +42,10 @@ export function VacancyList({ search }: VacancyListProps) {
         <ul aria-label="Daftar lowongan" className="space-y-6">
           {vacancies.map((vacancy) => (
             <li key={vacancy.id}>
-              <JobCard vacancy={vacancy} />
+              <JobCard
+                vacancy={vacancy}
+                href={vacancyDetailHref(vacancy.id, search)}
+              />
             </li>
           ))}
         </ul>
