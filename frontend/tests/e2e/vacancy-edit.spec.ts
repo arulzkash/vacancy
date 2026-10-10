@@ -240,7 +240,10 @@ test("client validation and cancel leave the vacancy unchanged", async ({
   await page
     .getByRole("textbox", { name: "Judul lowongan", exact: true })
     .fill("");
-  await page.getByRole("textbox", { name: "Deskripsi", exact: true }).fill("");
+  const editor = page.getByRole("textbox", { name: "Deskripsi", exact: true });
+  await editor.press("ControlOrMeta+A");
+  await editor.press("Backspace");
+  await expect(editor).toHaveText("");
   await page.getByRole("button", saveButton).click();
   await expect(
     page.getByRole("textbox", { name: "Judul lowongan", exact: true }),

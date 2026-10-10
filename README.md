@@ -152,6 +152,24 @@ The description editor supports headings, bold, italic, underline, bullet and nu
 
 ## Tests and checks
 
+To run the verification sequence from the repository root:
+
+```sh
+node scripts/verify.mjs
+```
+
+This stops at the first failure and runs PHPUnit, Pint, Composer validation,
+ESLint, TypeScript, two separate Playwright runs, and a production build.
+Each browser run resets only the dedicated E2E database. The script also checks
+that the development database's SHA-256 checksum is unchanged across the sequence.
+Avoid editing development data while this check is running.
+
+The completed visual audit in `responsive.spec.ts` is excluded from this sequence;
+the feature tests still run. Use `npm run test:e2e` from `frontend` to include the
+responsive audit. The production build uses `.next-e2e` so a running development
+server can keep using `.next`. Install both projects' dependencies before running
+the sequence, and leave ports 8001 and 3001 available.
+
 Run backend tests and checks from `backend`:
 
 ```sh

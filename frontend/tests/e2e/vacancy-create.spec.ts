@@ -281,7 +281,10 @@ test("invalid calendar dates and a cleared description are rejected before POST"
   await expect(page.getByLabel("Aktif hingga")).toHaveValue("05/12/2030");
   await fillForm(page);
   await page.getByLabel("Aktif hingga").fill("31/02/2030");
-  await page.getByRole("textbox", { name: "Deskripsi", exact: true }).fill("");
+  const editor = page.getByRole("textbox", { name: "Deskripsi", exact: true });
+  await editor.press("ControlOrMeta+A");
+  await editor.press("Backspace");
+  await expect(editor).toHaveText("");
   await page
     .getByRole("button", { name: "Buat lowongan", exact: true })
     .click();
@@ -291,5 +294,7 @@ test("invalid calendar dates and a cleared description are rejected before POST"
   await expect(page.locator("#description-error")).toHaveText(
     "Deskripsi wajib diisi.",
   );
+  await expect(page.getByRole("textbox", { name: "Deskripsi", exact: true }))
+    .toHaveText("");
   expect(posts).toBe(0);
 });

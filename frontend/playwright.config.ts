@@ -12,6 +12,9 @@ const installedWindowsChannel = process.platform === "win32"
 
 export default defineConfig({
   testDir: "./tests/e2e",
+  testIgnore: process.env.SKIP_RESPONSIVE_AUDIT === "1"
+    ? "**/responsive.spec.ts"
+    : [],
   fullyParallel: false,
   workers: 1,
   forbidOnly: !!process.env.CI,
