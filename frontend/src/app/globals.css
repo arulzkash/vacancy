@@ -1,11 +1,17 @@
 @import "tailwindcss";
 
-@theme inline {
+@theme {
   --font-sans: Arial, Helvetica, sans-serif;
+  --color-ink: #18181b;
+  --color-brand-navy: #2d3e50;
+  --color-muted: #71717a;
+  --color-line: #e4e4e7;
+  --color-surface: #fafafa;
+  --color-accent: #60a5fa;
 }
 
 body {
-  background: #fafafa;
-  color: #18181b;
+  background: #ffffff;
+  color: var(--color-ink);
   font-family: Arial, Helvetica, sans-serif;
 }

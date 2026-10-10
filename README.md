@@ -56,6 +56,8 @@ npm run dev -- --hostname 127.0.0.1 --port 3000
 
 Open [the application](http://127.0.0.1:3000). The backend runs at `http://127.0.0.1:8000`; its [health endpoint](http://127.0.0.1:8000/up) checks the application and database connection. Stop either server with `Ctrl+C`.
 
+The homepage redirects to `/vacancies`, where vacancy cards are loaded from the Laravel API. The list includes loading, empty, and error states with a retry button. Dates are displayed in Indonesian using the Asia/Jakarta timezone.
+
 ## Configuration
 
 | File | Variable | Default |
@@ -145,10 +147,15 @@ php artisan config:clear
 ## Project structure
 
 ```text
-backend/             Laravel API, migrations, and PHPUnit tests
-frontend/src/        Next.js pages, components, and API client
-frontend/tests/e2e/  Playwright browser tests
-frontend/scripts/    Setup and browser test server scripts
+backend/                         Laravel API, migrations, and PHPUnit tests
+frontend/src/app/                Next.js pages and layouts
+frontend/src/components/         Shared layout and icon components
+frontend/src/features/vacancies/  Vacancy types, API client, query, and UI
+frontend/src/lib/                API configuration and date formatting
+frontend/tests/e2e/              Playwright browser tests
+frontend/scripts/                Setup and browser test server scripts
 ```
 
 Design reference: [Dicoding Figma](https://www.figma.com/design/JnDQ3lIhN37Mv4630lFKKq/Dicoding?node-id=0-1).
+
+The branding and hero assets in `frontend/public/images` are local exports from the Figma vacancy list design.
