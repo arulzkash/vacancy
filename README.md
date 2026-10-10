@@ -192,7 +192,7 @@ Detail tests cover the complete list → search → card → detail → back flo
 
 Create tests submit the complete form to the actual API, verify dashboard and public-list cache refresh, then search for and open the new vacancy. Rich-text tests verify formatting saved through the API and rendered on detail, URL validation, toolbar actions, and formatting retained after a failed submission. Create tests also cover escaped description text, required-field and salary validation, field-level HTTP 422 errors, network/server failures, prevention of duplicate submissions, and mobile overflow. An automatic fixture removes only the IDs created by each test from `backend/database/e2e.sqlite`, preserving the four seeded samples and the development database.
 
-Dashboard tests cover API-backed cards, dates and order, disabled edit/delete controls, navigation and cancellation, loading, empty and error states with retry, direct URLs, reloads, and mobile overflow.
+Dashboard tests cover API-backed cards, dates and order, edit navigation and delete controls, navigation and cancellation, loading, empty and error states with retry, direct URLs, reloads, and mobile overflow.
 
 Playwright starts its own backend on port **8001** and frontend on port **3001**. These ports must be available. The regular development servers can remain running on ports 8000 and 3000.
 
@@ -238,3 +238,11 @@ frontend/scripts/                Setup and browser test server scripts
 Design reference: [Dicoding Figma](https://www.figma.com/design/JnDQ3lIhN37Mv4630lFKKq/Dicoding?node-id=0-1).
 
 The branding, hero, and dashboard Jobs banner in `frontend/public/images` are local assets derived from the Figma designs.
+
+### Delete a vacancy
+
+Open Dashboard, click **Hapus** on a vacancy, and confirm its title. Deletion is permanent. Cancel or Escape leaves the vacancy unchanged. During deletion, the dialog cannot be dismissed or submitted again. Failed requests can be retried; successful deletion refreshes dashboard and public lists and clears cached detail/edit data. A vacancy already deleted elsewhere is treated as removed.
+
+`DELETE /api/vacancies/{id}` returns HTTP 204 with no body, or HTTP 404 for a missing ID. Like create and edit, this exercise endpoint has no authentication or ownership checks.
+
+Delete tests cover confirmation, cancellation and Escape, focus restoration, duplicate submission prevention, network/server failures with retry, already removed records, and disappearance from dashboard, public lists, detail and edit. Tests delete only records created by their own fixture.

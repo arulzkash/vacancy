@@ -43,7 +43,7 @@ test("dashboard renders API vacancies in order with dates and edit navigation", 
     ).toHaveAttribute("href", `/vacancies/${vacancy.id}/edit`);
     await expect(
       card.getByRole("button", { name: "Hapus", exact: true }),
-    ).toBeDisabled();
+    ).toBeEnabled();
   }
   await cards
     .first()

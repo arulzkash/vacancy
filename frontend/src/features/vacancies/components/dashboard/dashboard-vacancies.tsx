@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import type { Vacancy } from "../../types";
+import { VacancyDeleteDialog } from "./vacancy-delete-dialog";
 import { useSearchParams } from "next/navigation";
 
 import Link from "next/link";
@@ -12,9 +15,33 @@ import { DashboardVacancyCard } from "./dashboard-vacancy-card";
 export function DashboardVacancies() {
   const updated = useSearchParams().get("updated") === "1";
   const query = useVacancies("");
+  const [selectedVacancy, setSelectedVacancy] = useState<Vacancy | null>(null);
+  const [deletedTitle, setDeletedTitle] = useState("");
+  useEffect(() => {
+    if (deletedTitle) document.getElementById("dashboard-heading")?.focus();
+  }, [deletedTitle]);
+
   return (
     <>
-      {updated && (
+      {selectedVacancy && (
+        <VacancyDeleteDialog
+          vacancy={selectedVacancy}
+          onCancel={() => setSelectedVacancy(null)}
+          onDeleted={() => {
+            setDeletedTitle(selectedVacancy.title);
+            setSelectedVacancy(null);
+          }}
+        />
+      )}
+      {deletedTitle && (
+        <p
+          role="status"
+          className="mb-6 break-words rounded-sm bg-green-50 p-4 text-sm text-green-800"
+        >
+          Lowongan “{deletedTitle}” berhasil dihapus.
+        </p>
+      )}
+      {updated && !deletedTitle && (
         <p
           role="status"
           className="mb-6 rounded-sm bg-green-50 p-4 text-sm text-green-800"
@@ -23,7 +50,11 @@ export function DashboardVacancies() {
         </p>
       )}
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <h1 id="dashboard-heading" className="text-2xl font-semibold leading-8">
+        <h1
+          tabIndex={-1}
+          id="dashboard-heading"
+          className="text-2xl font-semibold leading-8"
+        >
           Lowongan Saya
         </h1>
         <Link
@@ -54,7 +85,14 @@ export function DashboardVacancies() {
       ) : (
         <div className="space-y-6">
           {query.data.map((vacancy) => (
-            <DashboardVacancyCard key={vacancy.id} vacancy={vacancy} />
+            <DashboardVacancyCard
+              key={vacancy.id}
+              vacancy={vacancy}
+              onDelete={(selected) => {
+                setDeletedTitle("");
+                setSelectedVacancy(selected);
+              }}
+            />
           ))}
         </div>
       )}

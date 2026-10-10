@@ -12,6 +12,7 @@ use App\Models\Vacancy;
 use App\Support\HtmlSanitizer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class VacancyController extends Controller
 {
@@ -39,6 +40,13 @@ class VacancyController extends Controller
         $vacancy->refresh();
 
         return new VacancyDetailResource($vacancy, $vacancy->description_html);
+    }
+
+    public function destroy(Vacancy $vacancy): Response
+    {
+        $vacancy->delete();
+
+        return response()->noContent();
     }
 
     public function index(ListVacanciesRequest $request): AnonymousResourceCollection

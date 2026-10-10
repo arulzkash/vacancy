@@ -12,3 +12,6 @@ Route::get('/vacancies/{vacancy}/edit', [VacancyController::class, 'edit'])
     ->whereNumber('vacancy');
 Route::put('/vacancies/{vacancy}', [VacancyController::class, 'update'])
     ->whereNumber('vacancy');
+
+Route::delete('/vacancies/{vacancy}', [VacancyController::class, 'destroy'])
+    ->whereNumber('vacancy');

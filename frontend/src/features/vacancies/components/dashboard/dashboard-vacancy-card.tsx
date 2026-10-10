@@ -4,7 +4,15 @@ import { formatClosingDate, formatPublishedDate } from "@/lib/dates";
 import type { Vacancy } from "../../types";
 import { DashboardIcon } from "./dashboard-icons";
 
-export function DashboardVacancyCard({ vacancy }: { vacancy: Vacancy }) {
+interface DashboardVacancyCardProps {
+  vacancy: Vacancy;
+  onDelete: (vacancy: Vacancy) => void;
+}
+
+export function DashboardVacancyCard({
+  vacancy,
+  onDelete,
+}: DashboardVacancyCardProps) {
   const titleId = `dashboard-vacancy-${vacancy.id}`;
   return (
     <article
@@ -63,9 +71,9 @@ export function DashboardVacancyCard({ vacancy }: { vacancy: Vacancy }) {
           </Link>
           <button
             type="button"
-            disabled
-            title="Fitur hapus belum tersedia"
-            className="inline-flex min-h-9 items-center gap-2 rounded-sm bg-rose-100 px-3 text-sm text-rose-700 disabled:cursor-not-allowed"
+            id={`delete-vacancy-${vacancy.id}`}
+            onClick={() => onDelete(vacancy)}
+            className="inline-flex min-h-9 items-center gap-2 rounded-sm bg-rose-100 px-3 text-sm text-rose-700 hover:bg-rose-200 focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             <DashboardIcon name="delete" className="size-4" />
             Hapus
