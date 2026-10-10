@@ -58,6 +58,8 @@ Open [the application](http://127.0.0.1:3000). The backend runs at `http://127.0
 
 The homepage redirects to `/vacancies`, where vacancy cards are loaded from the Laravel API. The list includes loading, empty, and error states with a retry button. Dates are displayed in Indonesian using the Asia/Jakarta timezone.
 
+Use the search field to find part of a vacancy title. Searches run 300 ms after typing stops; pressing Enter searches immediately. Surrounding spaces are trimmed, and clearing the field restores the complete list. The keyword is stored as `search` in the URL, so `/vacancies?search=Developer` can be opened directly or shared. Searches replace the current history entry without reloading or scrolling the page.
+
 ## Configuration
 
 | File | Variable | Default |
@@ -73,6 +75,8 @@ Local environment files and SQLite databases are excluded from Git. The setup co
 ## Vacancy API
 
 `GET /api/vacancies` returns all vacancies in a `data` array, ordered by creation time descending, then ID descending. An empty database returns `{"data":[]}`.
+
+The optional `search` query parameter filters by part of the title, ignoring capitalization for ASCII letters. Empty or whitespace-only keywords return all vacancies. `%`, `_`, and `!` are treated as literal characters. SQLite's default `LIKE` behavior does not perform Unicode case folding. The parameter must be a string of at most 255 characters; invalid parameters return HTTP 422 with validation errors.
 
 Each item contains its title, position, company name, employment type, candidate count, closing date, location, remote flag, experience level, salary visibility, salary range, and timestamps. Closing dates use `YYYY-MM-DD`; timestamps use ISO 8601 in UTC. Descriptions are excluded from the list response. When `show_salary` is `false`, `salary_min` and `salary_max` are always `null`.
 
@@ -118,6 +122,8 @@ npm run test:e2e
 The browser suite checks the homepage redirect, four seeded vacancy cards in API order, card metadata, Indonesian dates, mobile overflow, loading and empty states, and recovery from network and server errors. It also checks the backend health endpoint and verifies that the development database stays unchanged during the tests.
 
 The list and retry recovery use the actual Laravel API. Empty and error scenarios intercept browser requests without changing database records. Loading and retry checks hold requests until their pending states have been verified, rather than relying on fixed delays.
+
+Search tests cover the 300 ms debounce, trimming and capitalization, clearing the keyword, direct URLs and reloads, empty results, Enter submission, retry, and cancellation of an older request when a newer search starts. The debounce test controls browser time; the other search flows use the actual API.
 
 Playwright starts its own backend on port **8001** and frontend on port **3001**. These ports must be available. The regular development servers can remain running on ports 8000 and 3000.
 

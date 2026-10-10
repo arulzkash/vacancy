@@ -6,8 +6,12 @@ import { VacancyListEmpty } from "./vacancy-list-empty";
 import { VacancyListError } from "./vacancy-list-error";
 import { VacancyListSkeleton } from "./vacancy-list-skeleton";
 
-export function VacancyList() {
-  const { data, isPending, isError, isFetching, refetch } = useVacancies();
+type VacancyListProps = {
+  search: string;
+};
+
+export function VacancyList({ search }: VacancyListProps) {
+  const { data, isPending, isError, isFetching, refetch } = useVacancies(search);
 
   function handleRetry() {
     void refetch();
@@ -32,7 +36,7 @@ export function VacancyList() {
       )}
 
       {vacancies.length === 0 ? (
-        <VacancyListEmpty />
+        <VacancyListEmpty search={search} />
       ) : (
         <ul aria-label="Daftar lowongan" className="space-y-6">
           {vacancies.map((vacancy) => (

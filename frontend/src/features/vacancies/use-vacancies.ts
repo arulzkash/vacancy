@@ -3,9 +3,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { getVacancies } from "./api";
 
-export function useVacancies() {
+export function useVacancies(search: string) {
   return useQuery({
-    queryKey: ["vacancies", "list"],
-    queryFn: ({ signal }) => getVacancies(signal),
+    queryKey: ["vacancies", "list", search],
+    queryFn: ({ signal }) => getVacancies(search, signal),
   });
 }

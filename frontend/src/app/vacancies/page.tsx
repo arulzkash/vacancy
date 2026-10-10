@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { VacanciesHero } from "@/features/vacancies/components/vacancies-hero";
-import { VacancyList } from "@/features/vacancies/components/vacancy-list";
+import { VacancyResults } from "@/features/vacancies/components/vacancy-results";
+import { VacancyListSkeleton } from "@/features/vacancies/components/vacancy-list-skeleton";
 
 export const metadata: Metadata = {
   title: "Lowongan Kerja | Dicoding Jobs",
@@ -15,14 +17,9 @@ export default function VacanciesPage() {
         aria-labelledby="vacancies-heading"
         className="mx-auto w-full max-w-[768px] px-5 py-12"
       >
-        <h2
-          id="vacancies-heading"
-          className="mb-6 text-xl font-semibold leading-8 sm:text-2xl"
-        >
-          Daftar Pekerjaan Terbaru
-        </h2>
-
-        <VacancyList />
+        <Suspense fallback={<VacancyListSkeleton />}>
+          <VacancyResults />
+        </Suspense>
       </section>
     </main>
   );

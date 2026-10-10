@@ -1,8 +1,17 @@
 import { API_BASE_URL } from "@/lib/api";
 import type { Vacancy, VacancyListResponse } from "./types";
 
-export async function getVacancies(signal?: AbortSignal): Promise<Vacancy[]> {
-  const response = await fetch(new URL("/api/vacancies", API_BASE_URL), {
+export async function getVacancies(
+  search: string,
+  signal?: AbortSignal,
+): Promise<Vacancy[]> {
+  const url = new URL("/api/vacancies", API_BASE_URL);
+
+  if (search !== "") {
+    url.searchParams.set("search", search);
+  }
+
+  const response = await fetch(url, {
     signal,
     cache: "no-store",
     headers: {
