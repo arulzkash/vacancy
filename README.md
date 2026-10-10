@@ -115,6 +115,10 @@ Then run:
 npm run test:e2e
 ```
 
+The browser suite checks the homepage redirect, four seeded vacancy cards in API order, card metadata, Indonesian dates, mobile overflow, loading and empty states, and recovery from network and server errors. It also checks the backend health endpoint and verifies that the development database stays unchanged during the tests.
+
+The list and retry recovery use the actual Laravel API. Empty and error scenarios intercept browser requests without changing database records. Loading and retry checks hold requests until their pending states have been verified, rather than relying on fixed delays.
+
 Playwright starts its own backend on port **8001** and frontend on port **3001**. These ports must be available. The regular development servers can remain running on ports 8000 and 3000.
 
 Use `npm run test:e2e:ui` for interactive tests or `npx playwright show-report` to open the HTML report.
