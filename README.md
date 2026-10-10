@@ -1,36 +1,31 @@
 # Dicoding Jobs
 
-A Laravel 13 API and a Next.js 16 frontend for the Dicoding Product Engineer Intern technical test. The application uses SQLite, TypeScript, Tailwind CSS, and TanStack Query.
+A job vacancy application for the Dicoding Product Engineer Intern technical test, built with Laravel 13, Next.js 16, and SQLite. Job seekers can browse, search by title, and open vacancy details. Recruiters can create, edit, and delete vacancies from the dashboard.
 
 ## Requirements
 
-- PHP 8.3 or later with the extensions required by Laravel, including `pdo_sqlite` and `sqlite3`.
+- PHP 8.3 or later with Laravel's required extensions, including `pdo_sqlite` and `sqlite3`.
 - Composer 2.
 - Node.js 22 and npm.
+- Git and Chrome, Edge, or Playwright Chromium for browser tests.
+
+SQLite is allowed by the brief's requirement for any SQL database. It keeps setup self-contained without a database server or Docker. Migrations, factories, seeders, and integration tests use SQL persistence. Moving to MySQL would require checking its different SQL behavior.
 
 ## Installation
 
-Clone the repository and open its root directory:
+Clone the repository and install the backend:
 
 ```sh
 git clone https://github.com/arulzkash/vacancy.git
-cd vacancy
-```
-
-Install and configure the backend:
-
-```sh
-cd backend
+cd vacancy/backend
 composer install
 composer run setup
 php artisan db:seed
 ```
 
-The setup command creates `.env`, an application key, and the development SQLite database when needed, then runs migrations. Running it again preserves existing environment settings, the application key, and database contents.
+Setup creates `.env`, an application key, and `database/database.sqlite`, then runs migrations. Repeating setup preserves existing settings and data. Seeding adds four sample vacancies without duplicating or overwriting existing samples.
 
-The seed command adds four sample vacancies. Running it again preserves existing records and does not duplicate the samples.
-
-In a second terminal, open the repository root and install the frontend:
+From the repository root, install the frontend:
 
 ```sh
 cd frontend
@@ -38,117 +33,52 @@ npm ci
 npm run setup
 ```
 
-The frontend setup command creates `.env.local` from `.env.example` if it does not already exist.
+Frontend setup creates `.env.local` from `.env.example` and preserves an existing file. Both dependency lockfiles are included.
 
-## Running locally
+## Run locally
 
-From `backend`:
+In one terminal, from `backend`:
 
 ```sh
 composer run dev
 ```
 
-From `frontend`, in a separate terminal:
+In another terminal, from `frontend`:
 
 ```sh
 npm run dev -- --hostname 127.0.0.1 --port 3000
 ```
 
-Open [the application](http://127.0.0.1:3000). The backend runs at `http://127.0.0.1:8000`; its [health endpoint](http://127.0.0.1:8000/up) checks the application and database connection. Stop either server with `Ctrl+C`.
+Open [the application](http://127.0.0.1:3000). The API runs at `http://127.0.0.1:8000`; [GET /up](http://127.0.0.1:8000/up) checks its database connection. Stop servers with `Ctrl+C`.
 
-The homepage redirects to `/vacancies`, where vacancy cards are loaded from the Laravel API. The list includes loading, empty, and error states with a retry button. Dates are displayed in Indonesian using the Asia/Jakarta timezone.
-
-Use the search field to find part of a vacancy title. Searches run 300 ms after typing stops; pressing Enter searches immediately. Surrounding spaces are trimmed, and clearing the field restores the complete list. The keyword is stored as `search` in the URL, so `/vacancies?search=Developer` can be opened directly or shared. Searches replace the current history entry without reloading or scrolling the page.
-
-Click a vacancy card to open `/vacancies/{id}`. The detail page loads its description and metadata from the API, including experience and candidate count. The back link restores the search keyword. Detail pages include a loading skeleton, a not-found message, and retry for request failures. Description lengths depend on the database content; the sample records contain brief descriptions.
-
-Open **Dashboard** in the navigation to manage the vacancy list at `/dashboard`, then use **Buat lowongan** to open `/vacancies/create`. The dashboard currently shows all vacancies because authentication and recruiter ownership are not implemented. Use **Edit** on a dashboard card to open `/vacancies/{id}/edit`. Delete controls remain disabled until that feature becomes available. Fill in the title, position, employment type, candidate count, closing date, location, description, and experience level. Position and location provide native combobox suggestions and also accept custom text. The form requires a minimum salary. The maximum is optional for a base salary. Use the salary visibility switch to control whether candidates can see it. Enter the active-until date as DD/MM/YYYY or use the calendar button; the API receives YYYY-MM-DD. The description starts with an editable rich-text template.
-
-The form uses React Hook Form and a TanStack Query mutation. While the request is pending, fields and the submit button are disabled. Validation errors appear beside their fields, and failed requests preserve the current input. A successful submission invalidates all list queries and redirects to `/vacancies?created=1` with an empty search and a success message. Cancelling creation returns to the dashboard. Descriptions are edited with Tiptap and submitted as HTML.
-
-Editing loads every stored field, including rich-text content and salaries hidden from candidates. Saving replaces the editable fields, refreshes the list and detail caches, and returns to `/dashboard?updated=1` with a success message. Failed saves keep the entered values and show field errors. Closing dates follow the same rule as creation: today or later in Asia/Jakarta. Cancelling returns to the dashboard without saving.
-
-The edit form uses `GET /api/vacancies/{id}/edit`, and updates use `PUT /api/vacancies/{id}` with a complete form payload (nullable salaries must still be present). Public list/detail responses keep hidden salaries as `null`. Authentication and ownership checks are outside the current scope; the edit endpoint is currently accessible under the same unauthenticated model as creation.
-
-## Configuration
-
-| File | Variable | Default |
+| Environment file | Setting | Default |
 | --- | --- | --- |
 | `backend/.env` | `DB_CONNECTION` | `sqlite` |
+| `backend/.env` | `APP_URL` | `http://127.0.0.1:8000` |
 | `backend/.env` | `FRONTEND_URL` | `http://127.0.0.1:3000` |
 | `frontend/.env.local` | `NEXT_PUBLIC_API_BASE_URL` | `http://127.0.0.1:8000` |
 
-Use the same hostname consistently. If you change the frontend address, update `FRONTEND_URL` to match its origin. The API base URL is the backend origin without `/api`. Restart the servers after changing environment files.
+Use the same hostname consistently. When ports change, update these origins and restart the servers. The frontend API URL must omit `/api`. Public frontend environment values are included at build time.
 
-Local environment files and SQLite databases are excluded from Git. The setup command creates `backend/database/database.sqlite` using the committed migrations.
+For a production frontend build, stop its development server first, then run from `frontend`:
 
-## Vacancy API
-
-`GET /api/vacancies` returns all vacancies in a `data` array, ordered by creation time descending, then ID descending. An empty database returns `{"data":[]}`.
-
-The optional `search` query parameter filters by part of the title, ignoring capitalization for ASCII letters. Empty or whitespace-only keywords return all vacancies. `%`, `_`, and `!` are treated as literal characters. SQLite's default `LIKE` behavior does not perform Unicode case folding. The parameter must be a string of at most 255 characters; invalid parameters return HTTP 422 with validation errors.
-
-Each item contains its title, position, company metadata, employment type, candidate count, closing date, location, remote flag, experience level, salary visibility, salary range, and timestamps. The `company` object includes `name`, `business_sector`, and `employee_range`, configured in `backend/config/company.php` for the single-company application. The employee range describes company size; it is separate from the vacancy's candidate count. Closing dates use `YYYY-MM-DD`; timestamps use ISO 8601 in UTC. Descriptions are excluded from the list response. When `show_salary` is `false`, `salary_min` and `salary_max` are always `null`.
-
-`GET /api/vacancies/{id}` returns one vacancy in a `data` object with the same public fields and an additional `description_html` field. Missing IDs and nonnumeric IDs return HTTP 404. Expired vacancies remain accessible through the detail endpoint.
-
-The detail response sanitizes description HTML with HTMLPurifier. Paragraphs, line breaks, headings (`h2`–`h4`), inline emphasis, lists, blockquotes, code, images, and absolute HTTP/HTTPS links are supported. Scripts, embedded content, event handlers, styling attributes, and unsafe or relative URLs are removed. Reading a detail does not modify the stored description or salary values.
-
-### Creating a vacancy
-
-`POST /api/vacancies` accepts a JSON object and returns HTTP **201** with the created vacancy in `data`, using the same fields as the detail response. Send `Content-Type: application/json` and `Accept: application/json`. Invalid input returns HTTP **422** with a `message` and an `errors` object keyed by field name, without inserting a record.
-
-| Field | Rules |
-| --- | --- |
-| `title`, `position`, `location` | Required strings, up to 255 characters. Surrounding whitespace is trimmed. |
-| `employment_type` | Required: `full-time`, `part-time`, `contract`, or `intern`. |
-| `candidate_count` | Required integer from 1 to 4,294,967,295. |
-| `closing_date` | Required valid `YYYY-MM-DD` date, today or later in Asia/Jakarta. |
-| `experience_level` | Required: `less_than_1`, `1_3`, `4_5`, `6_10`, or `more_than_10`. |
-| `description_html` | Required string. Sanitized before validation and storage, up to 65,535 characters after sanitization, with nonempty text. Empty editor paragraphs, whitespace, invisible characters, and markup that becomes empty after sanitization are rejected. |
-| `is_remote`, `show_salary` | Optional booleans, defaulting to `false`; Laravel also accepts `0`, `1`, `"0"`, and `"1"`. |
-| `salary_min`, `salary_max` | Nullable nonnegative integers within PHP's integer range. The minimum is required when `show_salary` is true or a maximum is supplied. The maximum is optional for a base salary. The maximum must be greater than or equal to the minimum. Equal amounts, including zero, are valid. |
-
-Hidden salary amounts may be stored but remain `null` in create, list, and detail responses. Company metadata comes from backend configuration. Extra fields, including client-supplied IDs, timestamps, and company metadata, are ignored; only validated vacancy fields are stored.
-
-To create a sample vacancy in PowerShell while the backend is running:
-
-```powershell
-$vacancyPayload = @{
-    title = 'Frontend Engineer'
-    position = 'Frontend Engineer'
-    employment_type = 'full-time'
-    candidate_count = 1
-    closing_date = [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId(
-        [DateTime]::UtcNow, 'SE Asia Standard Time'
-    ).AddDays(30).ToString('yyyy-MM-dd')
-    location = 'Bandung'
-    is_remote = $true
-    description_html = '<h2>Deskripsi Pekerjaan</h2><p>Build accessible learning products.</p>'
-    experience_level = '1_3'
-    show_salary = $true
-    salary_min = 5000000
-    salary_max = 8000000
-} | ConvertTo-Json
-
-Invoke-RestMethod -Method Post `
-    -Uri 'http://127.0.0.1:8000/api/vacancies' `
-    -ContentType 'application/json' `
-    -Headers @{ Accept = 'application/json' } `
-    -Body ([System.Text.Encoding]::UTF8.GetBytes($vacancyPayload)) |
-    ConvertTo-Json -Depth 5
+```sh
+npm run build
+npm run start -- --hostname 127.0.0.1 --port 3000
 ```
 
-This command adds a record to the local development database. The returned ID can be opened at `/vacancies/{id}` in the frontend.
+Keep the Laravel server running separately. These commands demonstrate a production frontend build locally; public hosting is outside this exercise.
 
-To inspect the response in PowerShell while the backend is running:
+## Try the main flows
 
-```powershell
-Invoke-RestMethod -Uri 'http://127.0.0.1:8000/api/vacancies' |
-    ConvertTo-Json -Depth 5
-```
+1. Open `/vacancies`, search for `Developer`, then select a card. Detail displays the stored description, company metadata, experience, and candidate count. Returning to the list preserves the search.
+2. Open **Dashboard**, select **Buat lowongan**, and fill in the form. After saving, the public list opens with a success message and no search keyword. Search for the new title and open its detail.
+3. From **Dashboard**, select **Edit**. Saving returns to the dashboard with updated data; cancelling preserves the stored vacancy.
+4. Select **Hapus**, review the title, and confirm. Cancelling or Escape preserves the vacancy; confirmation permanently deletes it.
 
-The description editor supports headings, bold, italic, underline, bullet and numbered lists, links, inline code, code blocks, and images from absolute HTTP(S) URLs. Select text before applying formatting or a link. Uploaded files are not supported. Descriptions must contain visible text; images alone are insufficient. The API sanitizes HTML and removes unsafe links, image sources, and event handlers.
+Dates use Asia/Jakarta. Closing dates must be today or later. Position and location offer suggestions and accept custom text. The create form requires a minimum salary; the maximum is optional. Public list/detail show salary only when **Tampilkan gaji** is enabled; hidden amounts are returned as `null` by public API responses.
+
+The rich-text editor supports headings, bold, italic, underline, lists, links, code, and images through absolute HTTP(S) URLs. HTMLPurifier sanitizes descriptions on the server. Descriptions must contain visible text; empty markup and images alone are rejected. Failed submissions keep entered values. Loading, empty, not-found, and retry states are included.
 
 ## Tests and checks
 
@@ -194,23 +124,15 @@ On Windows, Playwright automatically uses Chrome or Edge when installed. If neit
 npx playwright install chromium --no-shell
 ```
 
+On Linux, install missing browser system libraries with `npx playwright install --with-deps chromium --no-shell`.
+
 Then run:
 
 ```sh
 npm run test:e2e
 ```
 
-The browser suite checks the homepage redirect, four seeded vacancy cards in API order, card metadata, Indonesian dates, mobile overflow, loading and empty states, and recovery from network and server errors. It also checks the backend health endpoint and verifies that the development database stays unchanged during the tests.
-
-The list and retry recovery use the actual Laravel API. Empty and error scenarios intercept browser requests without changing database records. Loading and retry checks hold requests until their pending states have been verified, rather than relying on fixed delays.
-
-Search tests cover the 300 ms debounce, trimming and capitalization, clearing the keyword, direct URLs and reloads, empty results, Enter submission, retry, and cancellation of an older request when a newer search starts. The debounce test controls browser time; the other search flows use the actual API.
-
-Detail tests cover the complete list → search → card → detail → back flow with the actual API, browser back, direct URLs and reloads, company metadata, description content, loading, missing and invalid IDs, network/server errors with retry, mobile overflow, and footer spacing for short descriptions. Loading requests are held until the pending state is checked. A rich-text scenario intercepts the detail response to verify headings, emphasis, lists, and links without changing stored records; HTML sanitization is covered by the backend tests.
-
-Create tests submit the complete form to the actual API, verify dashboard and public-list cache refresh, then search for and open the new vacancy. Rich-text tests verify formatting saved through the API and rendered on detail, URL validation, toolbar actions, and formatting retained after a failed submission. Create tests also cover escaped description text, required-field and salary validation, field-level HTTP 422 errors, network/server failures, prevention of duplicate submissions, and mobile overflow. An automatic fixture removes only the IDs created by each test from `backend/database/e2e.sqlite`, preserving the four seeded samples and the development database.
-
-Dashboard tests cover API-backed cards, dates and order, edit navigation and delete controls, navigation and cancellation, loading, empty and error states with retry, direct URLs, reloads, and mobile overflow.
+The suite covers list → search → detail using the actual Laravel API, create/edit/delete, rich text, salary privacy, validation, loading/empty/not-found states, and failures with retry. Fixtures clean only the records they create.
 
 Playwright starts its own backend on port **8001** and frontend on port **3001**. These ports must be available. The regular development servers can remain running on ports 8000 and 3000.
 
@@ -241,40 +163,55 @@ If Laravel configuration has been cached, clear it from `backend` before running
 php artisan config:clear
 ```
 
-## Project structure
+## Architecture and API
+
+Laravel handles validation, SQL persistence, HTML sanitization, and API resources. Next.js renders the UI; TanStack Query handles server state and cache invalidation, React Hook Form handles form state, and Tiptap edits descriptions.
 
 ```text
-backend/                         Laravel API, migrations, and PHPUnit tests
-frontend/src/app/                Next.js pages and layouts
-frontend/src/components/         Shared layout and icon components
-frontend/src/features/vacancies/
-  api/                           Read, create, update, and delete API calls
-  hooks/                         Queries, mutations, and search state
-  components/
-    list/                        Vacancy cards, search, and list states
-    detail/                      Detail content, header, and detail states
-    dashboard/                   Recruiter dashboard and delete confirmation
-    form/                        Shared create/edit form and field components
-    editor/                      Rich-text editor and toolbar
-  utils/                         Links, salary formatting, and description helpers
-  form-values.ts                 Form defaults, payload mapping, and date helpers
-  labels.ts                      Display labels
-  types.ts                       Vacancy and API response types
-frontend/src/lib/                API configuration and date formatting
-frontend/tests/e2e/              Playwright browser tests
-frontend/scripts/                Setup and browser test server scripts
+backend/app/                      Controllers, requests, resources, model, sanitizer
+backend/database/                 Migrations, factory, seeder
+backend/tests/                    PHPUnit unit and integration tests
+frontend/src/app/                 Routes and layouts
+frontend/src/components/          Shared layout and icons
+frontend/src/features/vacancies/  API calls, hooks, form values, utilities
+  components/list/               Job cards, search, list states
+  components/detail/             Metadata and description rendering
+  components/dashboard/          Management cards and delete confirmation
+  components/form/               Shared create/edit form and fields
+  components/editor/             Rich-text editor and toolbar
+frontend/tests/e2e/               Playwright tests and fixtures
+scripts/verify.mjs                Verification sequence
 ```
 
-Design reference: [Dicoding Figma](https://www.figma.com/design/JnDQ3lIhN37Mv4630lFKKq/Dicoding?node-id=0-1).
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| GET | `/api/vacancies?search=Developer` | List and optional title search |
+| GET | `/api/vacancies/{id}` | Public detail |
+| POST | `/api/vacancies` | Create |
+| GET | `/api/vacancies/{id}/edit` | Stored edit form values |
+| PUT | `/api/vacancies/{id}` | Update |
+| DELETE | `/api/vacancies/{id}` | Delete |
 
-The branding, hero, and dashboard Jobs banner in `frontend/public/images` are local assets derived from the Figma designs.
+See [API documentation](docs/api.md) for payloads, validation, response contracts, and an example request.
 
-### Delete a vacancy
+## Scope and limitations
 
-Open Dashboard, click **Hapus** on a vacancy, and confirm its title. Deletion is permanent. Cancel or Escape leaves the vacancy unchanged. During deletion, the dialog cannot be dismissed or submitted again. Failed requests can be retried; successful deletion refreshes dashboard and public lists and clears cached detail/edit data. A vacancy already deleted elsewhere is treated as removed.
+The required create/list/detail APIs, title search, reusable Job Card, API integration, and unit/integration/E2E tests are implemented. Dashboard, edit, and delete are additional features.
 
-`DELETE /api/vacancies/{id}` returns HTTP 204 with no body, or HTTP 404 for a missing ID. Like create and edit, this exercise endpoint has no authentication or ownership checks.
+- This is a single-company exercise without authentication or ownership checks. The dashboard manages all vacancies, and the edit endpoint returns stored hidden salary values.
+- Pagination, location/type filters, applications, bookmarks, file uploads, and collaborative editing are not implemented.
+- Expired vacancies remain accessible. Search is case-insensitive for ASCII letters; SQLite does not provide full Unicode case folding by default.
+- External description images depend on the image host's availability.
+- The current dependency audit reports five high-severity findings in the ESLint development dependency chain. The production-only npm audit reports none. Automatic fixes propose incompatible dependency changes and have not been applied.
 
-Delete tests cover confirmation, cancellation and Escape, focus restoration, duplicate submission prevention, network/server failures with retry, already removed records, and disappearance from dashboard, public lists, detail and edit. Tests delete only records created by their own fixture.
+## Screenshots and assets
 
-Public vacancy cards show a dollar icon and monthly salary below the title. Detail headers show the same salary with a **Gaji:** label above the business sector. Salaries appear only when **Tampilkan gaji** is enabled and a minimum is available. A missing maximum shows a single amount; otherwise both amounts are displayed in Indonesian rupiah formatting.
+![Vacancy list](docs/screenshots/vacancies.png)
+
+![Recruiter dashboard](docs/screenshots/dashboard.png)
+
+![Vacancy detail](docs/screenshots/detail.png)
+
+![Create vacancy](docs/screenshots/create.png)
+
+Design reference: Dicoding Figma. Branding, hero images, and the dashboard banner are stored locally in `frontend/public/images`. The local Inter font includes its [SIL Open Font License](frontend/public/fonts/OFL.txt).
