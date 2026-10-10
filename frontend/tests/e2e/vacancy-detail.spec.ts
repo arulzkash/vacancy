@@ -55,6 +55,8 @@ test("list, search, detail, and back link work together with the actual API", as
   await expect(page.getByText("4–5 tahun", { exact: true })).toBeVisible();
   await expect(page.getByText(`${payload.data.candidate_count} kandidat`, { exact: true })).toBeVisible();
 
+  await expect(page.getByText(/^Gaji:/)).toHaveCount(0);
+
   const description = page.getByRole("region", { name: "Deskripsi lowongan" });
   const expectedText = await page.evaluate((html) => {
     return new DOMParser().parseFromString(html, "text/html").body.textContent ?? "";

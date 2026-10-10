@@ -9,6 +9,7 @@ import {
 import { formatClosingDate, formatPublishedDate } from "@/lib/dates";
 import { employmentTypeLabels, experienceLevelLabels } from "../labels";
 import type { Vacancy } from "../types";
+import { VacancySalary } from "./vacancy-salary";
 
 type JobCardProps = {
   vacancy: Vacancy;
@@ -59,20 +60,24 @@ export function JobCard({ vacancy, href }: JobCardProps) {
               {vacancy.title}
             </h3>
 
-            <div className="mt-3 flex flex-wrap gap-x-3 gap-y-2 text-xs leading-5 text-muted">
-              <MetadataItem icon={<CompanyIcon />}>
-                {vacancy.company.name}
-              </MetadataItem>
-              <span>{employmentTypeLabels[vacancy.employment_type]}</span>
-            </div>
+            <div className="mt-3 space-y-1">
+              <VacancySalary vacancy={vacancy} variant="card" />
 
-            <div className="mt-1 flex flex-wrap gap-x-3 gap-y-2 text-xs leading-5 text-muted">
-              <MetadataItem icon={<LocationIcon />}>
-                {locationLabel}
-              </MetadataItem>
-              <MetadataItem icon={<ExperienceIcon />}>
-                {experienceLevelLabels[vacancy.experience_level]}
-              </MetadataItem>
+              <div className="flex flex-wrap gap-x-3 gap-y-2 text-xs leading-5 text-muted">
+                <MetadataItem icon={<CompanyIcon />}>
+                  {vacancy.company.name}
+                </MetadataItem>
+                <span>{employmentTypeLabels[vacancy.employment_type]}</span>
+              </div>
+
+              <div className="flex flex-wrap gap-x-3 gap-y-2 text-xs leading-5 text-muted">
+                <MetadataItem icon={<LocationIcon />}>
+                  {locationLabel}
+                </MetadataItem>
+                <MetadataItem icon={<ExperienceIcon />}>
+                  {experienceLevelLabels[vacancy.experience_level]}
+                </MetadataItem>
+              </div>
             </div>
           </div>
         </div>

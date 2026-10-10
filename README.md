@@ -246,3 +246,5 @@ Open Dashboard, click **Hapus** on a vacancy, and confirm its title. Deletion is
 `DELETE /api/vacancies/{id}` returns HTTP 204 with no body, or HTTP 404 for a missing ID. Like create and edit, this exercise endpoint has no authentication or ownership checks.
 
 Delete tests cover confirmation, cancellation and Escape, focus restoration, duplicate submission prevention, network/server failures with retry, already removed records, and disappearance from dashboard, public lists, detail and edit. Tests delete only records created by their own fixture.
+
+Public vacancy cards show a dollar icon and monthly salary below the title. Detail headers show the same salary with a **Gaji:** label above the business sector. Salaries appear only when **Tampilkan gaji** is enabled and a minimum is available. A missing maximum shows a single amount; otherwise both amounts are displayed in Indonesian rupiah formatting.

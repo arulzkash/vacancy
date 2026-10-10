@@ -45,6 +45,8 @@ test("recruiter creates a vacancy and a job seeker can find and open it", async 
     title,
   );
 
+  await expect(page.getByRole("article", { name: title, exact: true })).toContainText("Rp5.000.000 - Rp8.000.000 per bulan");
+
   // The dashboard shares the invalidated list cache and must also show the new vacancy.
   await page
     .getByRole("navigation", { name: "Navigasi utama" })
@@ -62,6 +64,7 @@ test("recruiter creates a vacancy and a job seeker can find and open it", async 
   await expect(page.getByRole("article")).toHaveCount(1);
   await page.getByRole("link", { name: title, exact: true }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(title);
+  await expect(page.getByText("Gaji: Rp5.000.000 - Rp8.000.000 per bulan", { exact: true })).toBeVisible();
   const content = page.getByRole("region", { name: "Deskripsi lowongan" });
   await expect(content).toContainText(
     'Use <script>alert("test")</script> as literal text.',
@@ -255,6 +258,10 @@ test("a visible base salary can be created without a maximum", async ({
   expect(data.salary_max).toBeNull();
   expect(data.closing_date).toBe("2030-11-01");
   await expect(page).toHaveURL("/vacancies?created=1");
+  const card = page.getByRole("article", { name: title, exact: true });
+  await expect(card).toContainText("Rp5.000.000 per bulan");
+  await card.getByRole("link", { name: title, exact: true }).click();
+  await expect(page.getByText("Gaji: Rp5.000.000 per bulan", { exact: true })).toBeVisible();
 });
 
 test("invalid calendar dates and a cleared description are rejected before POST", async ({

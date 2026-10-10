@@ -6,6 +6,7 @@ import {
 } from "@/components/icons/metadata-icons";
 import type { Vacancy } from "../types";
 import { VacancyBackLink } from "./vacancy-back-link";
+import { VacancySalary } from "./vacancy-salary";
 
 type VacancyDetailHeaderProps = {
   vacancy: Vacancy;
@@ -40,6 +41,7 @@ export function VacancyDetailHeader({
             <h1 className="break-words text-2xl font-semibold leading-8 text-ink">
               {vacancy.title}
             </h1>
+            <VacancySalary vacancy={vacancy} variant="detail" />
             <p className="mt-2 break-words text-sm leading-5 text-muted">
               Sektor bisnis: {vacancy.company.business_sector}
             </p>

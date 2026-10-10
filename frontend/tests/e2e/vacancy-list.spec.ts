@@ -100,13 +100,14 @@ test("homepage redirects and renders seeded vacancies from the actual API", asyn
     );
   }
 
-  // Each card links to its own detail; list cards omit salary by design.
+  // Each card links to its own detail; only public salaries are shown.
   await expect(page.getByRole("article").getByRole("link")).toHaveCount(4);
   for (const vacancy of payload.data) {
     await expect(page.getByRole("link", { name: vacancy.title, exact: true }))
       .toHaveAttribute("href", `/vacancies/${vacancy.id}`);
   }
-  await expect(page.getByRole("article").filter({ hasText: /Rp\s*[\d.]/ })).toHaveCount(0);
+  await expect(page.getByRole("article").filter({ hasText: /Rp\s*[\d.]/ })).toHaveCount(1);
+  await expect(page.getByRole("article", { name: "Product Engineer", exact: true })).toContainText("Rp5.000.000 - Rp8.000.000 per bulan");
   const hiddenSalary = payload.data.find((vacancy) => vacancy.title === "Android Developer");
   expect(hiddenSalary?.show_salary).toBe(false);
   expect(hiddenSalary?.salary_min).toBeNull();
