@@ -86,6 +86,53 @@ Each item contains its title, position, company metadata, employment type, candi
 
 The detail response sanitizes description HTML with HTMLPurifier. Paragraphs, line breaks, headings (`h2`–`h4`), inline emphasis, lists, blockquotes, and HTTP/HTTPS links are supported. Scripts, embedded content, images, event handlers, styling attributes, and unsafe link schemes are removed. Reading a detail does not modify the stored description or salary values.
 
+### Creating a vacancy
+
+`POST /api/vacancies` accepts a JSON object and returns HTTP **201** with the created vacancy in `data`, using the same fields as the detail response. Send `Content-Type: application/json` and `Accept: application/json`. Invalid input returns HTTP **422** with a `message` and an `errors` object keyed by field name, without inserting a record.
+
+| Field | Rules |
+| --- | --- |
+| `title`, `position`, `location` | Required strings, up to 255 characters. Surrounding whitespace is trimmed. |
+| `employment_type` | Required: `full-time`, `part-time`, `contract`, or `intern`. |
+| `candidate_count` | Required integer from 1 to 4,294,967,295. |
+| `closing_date` | Required valid `YYYY-MM-DD` date, today or later in Asia/Jakarta. |
+| `experience_level` | Required: `less_than_1`, `1_3`, `4_5`, `6_10`, or `more_than_10`. |
+| `description_html` | Required string. Sanitized before validation and storage, up to 65,535 characters after sanitization, with nonempty text. Empty editor paragraphs, whitespace, invisible characters, and markup that becomes empty after sanitization are rejected. |
+| `is_remote`, `show_salary` | Optional booleans, defaulting to `false`; Laravel also accepts `0`, `1`, `"0"`, and `"1"`. |
+| `salary_min`, `salary_max` | Nullable nonnegative integers within PHP's integer range. Both are required when `show_salary` is true or when either amount is supplied. The maximum must be greater than or equal to the minimum. Equal amounts, including zero, are valid. |
+
+Hidden salary amounts may be stored but remain `null` in create, list, and detail responses. Company metadata comes from backend configuration. Extra fields, including client-supplied IDs, timestamps, and company metadata, are ignored; only validated vacancy fields are stored.
+
+To create a sample vacancy in PowerShell while the backend is running:
+
+```powershell
+$vacancyPayload = @{
+    title = 'Frontend Engineer'
+    position = 'Frontend Engineer'
+    employment_type = 'full-time'
+    candidate_count = 1
+    closing_date = [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId(
+        [DateTime]::UtcNow, 'SE Asia Standard Time'
+    ).AddDays(30).ToString('yyyy-MM-dd')
+    location = 'Bandung'
+    is_remote = $true
+    description_html = '<h2>Deskripsi Pekerjaan</h2><p>Build accessible learning products.</p>'
+    experience_level = '1_3'
+    show_salary = $true
+    salary_min = 5000000
+    salary_max = 8000000
+} | ConvertTo-Json
+
+Invoke-RestMethod -Method Post `
+    -Uri 'http://127.0.0.1:8000/api/vacancies' `
+    -ContentType 'application/json' `
+    -Headers @{ Accept = 'application/json' } `
+    -Body ([System.Text.Encoding]::UTF8.GetBytes($vacancyPayload)) |
+    ConvertTo-Json -Depth 5
+```
+
+This command adds a record to the local development database. The returned ID can be opened at `/vacancies/{id}` in the frontend.
+
 To inspect the response in PowerShell while the backend is running:
 
 ```powershell

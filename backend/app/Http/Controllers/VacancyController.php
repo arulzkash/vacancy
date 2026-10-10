@@ -3,14 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ListVacanciesRequest;
+use App\Http\Requests\StoreVacancyRequest;
 use App\Http\Resources\VacancyDetailResource;
 use App\Http\Resources\VacancyResource;
 use App\Models\Vacancy;
 use App\Support\HtmlSanitizer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class VacancyController extends Controller
 {
+    public function store(StoreVacancyRequest $request): JsonResponse
+    {
+        $vacancy = Vacancy::query()->create($request->validated());
+        $vacancy->refresh();
+
+        return (new VacancyDetailResource($vacancy, $vacancy->description_html))
+            ->response()
+            ->setStatusCode(201);
+    }
+
     public function index(ListVacanciesRequest $request): AnonymousResourceCollection
     {
         $query = Vacancy::query();
