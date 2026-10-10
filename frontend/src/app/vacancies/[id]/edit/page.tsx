@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { VacancyCreateHero } from "@/features/vacancies/components/vacancy-create-hero";
-import { VacancyEditForm } from "@/features/vacancies/components/vacancy-edit-form";
+import { VacancyCreateHero } from "@/features/vacancies/components/form/vacancy-create-hero";
+import { VacancyEditForm } from "@/features/vacancies/components/form/vacancy-edit-form";
 
 export const metadata: Metadata = { title: "Edit Lowongan | Dicoding Jobs" };
 

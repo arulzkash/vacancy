@@ -1,6 +1,6 @@
 "use client";
 
-import { useCreateVacancy } from "../use-create-vacancy";
+import { useCreateVacancy } from "../../hooks/use-create-vacancy";
 import { VacancyForm } from "./vacancy-form";
 
 export function VacancyCreateForm() {

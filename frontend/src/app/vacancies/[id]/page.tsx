@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { VacancyDetail } from "@/features/vacancies/components/vacancy-detail";
-import { vacancyListHref } from "@/features/vacancies/links";
+import { VacancyDetail } from "@/features/vacancies/components/detail/vacancy-detail";
+import { vacancyListHref } from "@/features/vacancies/utils/links";
 
 export const metadata: Metadata = {
   title: "Detail Lowongan | Dicoding Jobs",

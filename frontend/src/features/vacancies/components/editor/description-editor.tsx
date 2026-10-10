@@ -2,7 +2,7 @@
 
 import { EditorContent, useEditor } from "@tiptap/react";
 import { useEffect, useImperativeHandle, useMemo, type Ref } from "react";
-import contentStyles from "../vacancy-description.module.css";
+import contentStyles from "../detail/vacancy-description.module.css";
 import { editorExtensions } from "./editor-extensions";
 import { EditorToolbar } from "./editor-toolbar";
 import styles from "./description-editor.module.css";

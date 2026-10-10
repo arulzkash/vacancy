@@ -2,9 +2,9 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError } from "@/lib/api-error";
-import { getVacancyForEdit } from "./api";
-import { updateVacancy } from "./create-api";
-import type { vacancyPayload } from "./create-form";
+import { getVacancyForEdit } from "../api/vacancies";
+import { updateVacancy } from "../api/update-vacancy";
+import type { vacancyPayload } from "../form-values";
 
 export function useVacancyForEdit(id: number) {
   return useQuery({

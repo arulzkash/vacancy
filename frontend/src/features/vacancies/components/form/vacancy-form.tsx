@@ -4,18 +4,18 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { FormProvider, useForm, type FieldErrors } from "react-hook-form";
-import { VacancyValidationError } from "../create-api";
+import { VacancyValidationError } from "../../api/save-vacancy";
 import {
   apiFieldNames,
   vacancyFormDefaults,
   vacancyPayload,
   type VacancyFormValues,
-} from "../create-form";
-import { createExperienceLevelLabels } from "../labels";
-import { VacancyDescriptionField } from "./form/vacancy-description-field";
-import { RadioField } from "./form/radio-field";
-import { VacancyInformationFields } from "./form/vacancy-information-fields";
-import { VacancySalaryFields } from "./form/vacancy-salary-fields";
+} from "../../form-values";
+import { createExperienceLevelLabels } from "../../labels";
+import { VacancyDescriptionField } from "./vacancy-description-field";
+import { RadioField } from "./radio-field";
+import { VacancyInformationFields } from "./vacancy-information-fields";
+import { VacancySalaryFields } from "./vacancy-salary-fields";
 
 type VacancyFormProps = {
   initialValues?: VacancyFormValues;

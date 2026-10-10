@@ -1,10 +1,10 @@
 "use client";
 
 import { ApiError } from "@/lib/api-error";
-import { vacancyFormValues } from "../create-form";
-import { useUpdateVacancy, useVacancyForEdit } from "../use-edit-vacancy";
+import { vacancyFormValues } from "../../form-values";
+import { useUpdateVacancy, useVacancyForEdit } from "../../hooks/use-edit-vacancy";
 import { VacancyForm } from "./vacancy-form";
-import { VacancyNotFound } from "./vacancy-not-found";
+import { VacancyNotFound } from "../vacancy-not-found";
 
 export function VacancyEditForm({ id }: { id: number }) {
   const query = useVacancyForEdit(id);

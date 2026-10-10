@@ -1,15 +1,15 @@
 "use client";
 
 import { ApiError } from "@/lib/api-error";
-import { employmentTypeLabels } from "../labels";
-import { useVacancy } from "../use-vacancy";
+import { employmentTypeLabels } from "../../labels";
+import { useVacancy } from "../../hooks/use-vacancy";
 import { VacancyAdditionalInfo } from "./vacancy-additional-info";
-import { VacancyBackLink } from "./vacancy-back-link";
+import { VacancyBackLink } from "../vacancy-back-link";
 import { VacancyDescription } from "./vacancy-description";
 import { VacancyDetailError } from "./vacancy-detail-error";
 import { VacancyDetailHeader } from "./vacancy-detail-header";
 import { VacancyDetailSkeleton } from "./vacancy-detail-skeleton";
-import { VacancyNotFound } from "./vacancy-not-found";
+import { VacancyNotFound } from "../vacancy-not-found";
 
 type VacancyDetailProps = {
   id: number;

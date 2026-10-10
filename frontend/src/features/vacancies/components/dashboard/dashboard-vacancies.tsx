@@ -6,8 +6,8 @@ import { VacancyDeleteDialog } from "./vacancy-delete-dialog";
 import { useSearchParams } from "next/navigation";
 
 import Link from "next/link";
-import { useVacancies } from "../../use-vacancies";
-import { VacancyListError } from "../vacancy-list-error";
+import { useVacancies } from "../../hooks/use-vacancies";
+import { VacancyListError } from "../list/vacancy-list-error";
 import { DashboardIcon } from "./dashboard-icons";
 import { DashboardSkeleton } from "./dashboard-skeleton";
 import { DashboardVacancyCard } from "./dashboard-vacancy-card";

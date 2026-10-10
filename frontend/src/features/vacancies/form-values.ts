@@ -1,5 +1,5 @@
 import type { EmploymentType, ExperienceLevel, VacancyDetail } from "./types";
-import { descriptionTemplate } from "./description-content";
+import { descriptionTemplate } from "./utils/description-content";
 
 export type VacancyFormValues = {
   title: string;

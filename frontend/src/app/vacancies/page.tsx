@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { VacanciesHero } from "@/features/vacancies/components/vacancies-hero";
-import { VacancyResults } from "@/features/vacancies/components/vacancy-results";
-import { VacancyListSkeleton } from "@/features/vacancies/components/vacancy-list-skeleton";
+import { VacanciesHero } from "@/features/vacancies/components/list/vacancies-hero";
+import { VacancyResults } from "@/features/vacancies/components/list/vacancy-results";
+import { VacancyListSkeleton } from "@/features/vacancies/components/list/vacancy-list-skeleton";
 
 export const metadata: Metadata = {
   title: "Lowongan Kerja | Dicoding Jobs",

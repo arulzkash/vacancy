@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { ApiError } from "@/lib/api-error";
-import { getVacancy } from "./api";
+import { getVacancy } from "../api/vacancies";
 
 export function useVacancy(id: number) {
   return useQuery({

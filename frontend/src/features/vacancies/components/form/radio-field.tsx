@@ -1,5 +1,5 @@
 import { useFormContext } from "react-hook-form";
-import type { VacancyFormValues } from "../../create-form";
+import type { VacancyFormValues } from "../../form-values";
 
 type RadioFieldProps = {
   name: "employment_type" | "experience_level";

@@ -1,7 +1,7 @@
 import { API_BASE_URL } from "@/lib/api";
 import { ApiError } from "@/lib/api-error";
-import type { vacancyPayload } from "./create-form";
-import type { VacancyDetail, VacancyDetailResponse } from "./types";
+import type { vacancyPayload } from "../form-values";
+import type { VacancyDetail, VacancyDetailResponse } from "../types";
 
 export class VacancyValidationError extends ApiError {
   constructor(public readonly fields: Record<string, string[]>) {
@@ -9,20 +9,7 @@ export class VacancyValidationError extends ApiError {
   }
 }
 
-export async function createVacancy(
-  payload: ReturnType<typeof vacancyPayload>,
-): Promise<VacancyDetail> {
-  return saveVacancy("/api/vacancies", "POST", payload);
-}
-
-export async function updateVacancy(
-  id: number,
-  payload: ReturnType<typeof vacancyPayload>,
-): Promise<VacancyDetail> {
-  return saveVacancy(`/api/vacancies/${id}`, "PUT", payload);
-}
-
-async function saveVacancy(
+export async function saveVacancy(
   path: string,
   method: "POST" | "PUT",
   payload: ReturnType<typeof vacancyPayload>,

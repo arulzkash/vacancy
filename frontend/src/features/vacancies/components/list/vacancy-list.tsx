@@ -1,7 +1,7 @@
 "use client";
 
-import { useVacancies } from "../use-vacancies";
-import { vacancyDetailHref } from "../links";
+import { useVacancies } from "../../hooks/use-vacancies";
+import { vacancyDetailHref } from "../../utils/links";
 import { JobCard } from "./job-card";
 import { VacancyListEmpty } from "./vacancy-list-empty";
 import { VacancyListError } from "./vacancy-list-error";

@@ -1,5 +1,5 @@
 import { SalaryIcon } from "@/components/icons/metadata-icons";
-import { formatVacancySalary } from "../salary";
+import { formatVacancySalary } from "../utils/salary";
 import type { Vacancy } from "../types";
 
 type VacancySalaryProps = {

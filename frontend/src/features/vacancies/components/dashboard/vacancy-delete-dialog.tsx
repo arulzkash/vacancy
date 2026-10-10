@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { Vacancy } from "../../types";
-import { useDeleteVacancy } from "../../use-delete-vacancy";
+import { useDeleteVacancy } from "../../hooks/use-delete-vacancy";
 
 interface VacancyDeleteDialogProps {
   vacancy: Vacancy;

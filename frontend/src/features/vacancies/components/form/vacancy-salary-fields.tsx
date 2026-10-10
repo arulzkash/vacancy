@@ -1,5 +1,5 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import type { VacancyFormValues } from "../../create-form";
+import type { VacancyFormValues } from "../../form-values";
 import { formControlClass } from "./form-field";
 
 export function VacancySalaryFields({

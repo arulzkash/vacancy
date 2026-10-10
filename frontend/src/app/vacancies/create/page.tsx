@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { VacancyCreateForm } from "@/features/vacancies/components/vacancy-create-form";
-import { VacancyCreateHero } from "@/features/vacancies/components/vacancy-create-hero";
+import { VacancyCreateForm } from "@/features/vacancies/components/form/vacancy-create-form";
+import { VacancyCreateHero } from "@/features/vacancies/components/form/vacancy-create-hero";
 
 export const metadata: Metadata = { title: "Buat Lowongan | Dicoding Jobs" };
 

@@ -7,9 +7,9 @@ import {
   LocationIcon,
 } from "@/components/icons/metadata-icons";
 import { formatClosingDate, formatPublishedDate } from "@/lib/dates";
-import { employmentTypeLabels, experienceLevelLabels } from "../labels";
-import type { Vacancy } from "../types";
-import { VacancySalary } from "./vacancy-salary";
+import { employmentTypeLabels, experienceLevelLabels } from "../../labels";
+import type { Vacancy } from "../../types";
+import { VacancySalary } from "../vacancy-salary";
 
 type JobCardProps = {
   vacancy: Vacancy;

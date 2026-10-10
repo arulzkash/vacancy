@@ -5,7 +5,7 @@ import type {
   VacancyDetail,
   VacancyDetailResponse,
   VacancyListResponse,
-} from "./types";
+} from "../types";
 
 export async function getVacancies(
   search: string,

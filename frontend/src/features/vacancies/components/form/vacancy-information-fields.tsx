@@ -1,5 +1,5 @@
 import { useFormContext } from "react-hook-form";
-import { type VacancyFormValues } from "../../create-form";
+import { type VacancyFormValues } from "../../form-values";
 import { createEmploymentTypeLabels } from "../../labels";
 import { FormField, formControlClass } from "./form-field";
 import { RadioField } from "./radio-field";

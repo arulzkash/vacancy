@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteVacancy } from "./delete-api";
+import { deleteVacancy } from "../api/delete-vacancy";
 
 export function useDeleteVacancy() {
   const queryClient = useQueryClient();

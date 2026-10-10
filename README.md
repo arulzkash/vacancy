@@ -229,7 +229,19 @@ php artisan config:clear
 backend/                         Laravel API, migrations, and PHPUnit tests
 frontend/src/app/                Next.js pages and layouts
 frontend/src/components/         Shared layout and icon components
-frontend/src/features/vacancies/  Vacancy types, API client, query, and UI
+frontend/src/features/vacancies/
+  api/                           Read, create, update, and delete API calls
+  hooks/                         Queries, mutations, and search state
+  components/
+    list/                        Vacancy cards, search, and list states
+    detail/                      Detail content, header, and detail states
+    dashboard/                   Recruiter dashboard and delete confirmation
+    form/                        Shared create/edit form and field components
+    editor/                      Rich-text editor and toolbar
+  utils/                         Links, salary formatting, and description helpers
+  form-values.ts                 Form defaults, payload mapping, and date helpers
+  labels.ts                      Display labels
+  types.ts                       Vacancy and API response types
 frontend/src/lib/                API configuration and date formatting
 frontend/tests/e2e/              Playwright browser tests
 frontend/scripts/                Setup and browser test server scripts

@@ -1,6 +1,6 @@
 "use client";
 
-import { useVacancySearch } from "../use-vacancy-search";
+import { useVacancySearch } from "../../hooks/use-vacancy-search";
 import { VacancyList } from "./vacancy-list";
 import { VacancySearch } from "./vacancy-search";
 import { VacancyCreatedNotice } from "./vacancy-created-notice";

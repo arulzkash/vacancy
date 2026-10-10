@@ -4,9 +4,9 @@ import {
   EmployeesIcon,
   LocationIcon,
 } from "@/components/icons/metadata-icons";
-import type { Vacancy } from "../types";
-import { VacancyBackLink } from "./vacancy-back-link";
-import { VacancySalary } from "./vacancy-salary";
+import type { Vacancy } from "../../types";
+import { VacancyBackLink } from "../vacancy-back-link";
+import { VacancySalary } from "../vacancy-salary";
 
 type VacancyDetailHeaderProps = {
   vacancy: Vacancy;

@@ -1,6 +1,6 @@
 import { useController, useFormContext } from "react-hook-form";
-import { hasDescriptionText } from "../../description-content";
-import type { VacancyFormValues } from "../../create-form";
+import { hasDescriptionText } from "../../utils/description-content";
+import type { VacancyFormValues } from "../../form-values";
 import { DescriptionEditor } from "../editor/description-editor";
 import { FormField } from "./form-field";
 

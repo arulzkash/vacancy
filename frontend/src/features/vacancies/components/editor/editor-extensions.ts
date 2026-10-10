@@ -1,6 +1,6 @@
 import Image from "@tiptap/extension-image";
 import StarterKit from "@tiptap/starter-kit";
-import { safeEditorUrl } from "../../description-content";
+import { safeEditorUrl } from "../../utils/description-content";
 
 const SafeImage = Image.extend({
   parseHTML() {

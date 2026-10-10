@@ -1,5 +1,5 @@
-import { experienceLevelLabels } from "../labels";
-import type { ExperienceLevel } from "../types";
+import { experienceLevelLabels } from "../../labels";
+import type { ExperienceLevel } from "../../types";
 
 type VacancyAdditionalInfoProps = {
   experience: ExperienceLevel;

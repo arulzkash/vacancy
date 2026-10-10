@@ -1,4 +1,4 @@
-import type { Vacancy } from "./types";
+import type { Vacancy } from "../types";
 
 const rupiahFormatter = new Intl.NumberFormat("id-ID", {
   maximumFractionDigits: 0,

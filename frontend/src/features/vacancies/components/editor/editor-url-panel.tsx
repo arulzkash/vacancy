@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { safeEditorUrl } from "../../description-content";
+import { safeEditorUrl } from "../../utils/description-content";
 
 type EditorUrlPanelProps = {
   kind: "link" | "image";
