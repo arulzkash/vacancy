@@ -7,6 +7,7 @@ From this directory:
 ```sh
 composer install
 composer run setup
+php artisan db:seed
 composer run dev
 ```
 

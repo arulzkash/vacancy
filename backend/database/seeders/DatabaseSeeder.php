@@ -14,6 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Vacancy fixtures will be introduced in Slice 1.
+        $this->call(VacancySeeder::class);
     }
 }

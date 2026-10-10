@@ -23,9 +23,12 @@ Install and configure the backend:
 cd backend
 composer install
 composer run setup
+php artisan db:seed
 ```
 
 The setup command creates `.env`, an application key, and the development SQLite database when needed, then runs migrations. Running it again preserves existing environment settings, the application key, and database contents.
+
+The seed command adds four sample vacancies. Running it again preserves existing records and does not duplicate the samples.
 
 In a second terminal, open the repository root and install the frontend:
 
@@ -64,6 +67,19 @@ Open [the application](http://127.0.0.1:3000). The backend runs at `http://127.0
 Use the same hostname consistently. If you change the frontend address, update `FRONTEND_URL` to match its origin. The API base URL is the backend origin without `/api`. Restart the servers after changing environment files.
 
 Local environment files and SQLite databases are excluded from Git. The setup command creates `backend/database/database.sqlite` using the committed migrations.
+
+## Vacancy API
+
+`GET /api/vacancies` returns all vacancies in a `data` array, ordered by creation time descending, then ID descending. An empty database returns `{"data":[]}`.
+
+Each item contains its title, position, company name, employment type, candidate count, closing date, location, remote flag, experience level, salary visibility, salary range, and timestamps. Closing dates use `YYYY-MM-DD`; timestamps use ISO 8601 in UTC. Descriptions are excluded from the list response. When `show_salary` is `false`, `salary_min` and `salary_max` are always `null`.
+
+To inspect the response in PowerShell while the backend is running:
+
+```powershell
+Invoke-RestMethod -Uri 'http://127.0.0.1:8000/api/vacancies' |
+    ConvertTo-Json -Depth 5
+```
 
 ## Tests and checks
 

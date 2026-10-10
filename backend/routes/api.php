@@ -1,3 +1,6 @@
 <?php
 
-// Vacancy endpoints will be introduced in Slice 1.
+use App\Http\Controllers\VacancyController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/vacancies', [VacancyController::class, 'index']);
