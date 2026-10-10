@@ -80,6 +80,10 @@ The optional `search` query parameter filters by part of the title, ignoring cap
 
 Each item contains its title, position, company name, employment type, candidate count, closing date, location, remote flag, experience level, salary visibility, salary range, and timestamps. Closing dates use `YYYY-MM-DD`; timestamps use ISO 8601 in UTC. Descriptions are excluded from the list response. When `show_salary` is `false`, `salary_min` and `salary_max` are always `null`.
 
+`GET /api/vacancies/{id}` returns one vacancy in a `data` object with the same public fields and an additional `description_html` field. Missing IDs and nonnumeric IDs return HTTP 404. Expired vacancies remain accessible through the detail endpoint.
+
+The detail response sanitizes description HTML with HTMLPurifier. Paragraphs, line breaks, headings (`h2`–`h4`), inline emphasis, lists, blockquotes, and HTTP/HTTPS links are supported. Scripts, embedded content, images, event handlers, styling attributes, and unsafe link schemes are removed. Reading a detail does not modify the stored description or salary values.
+
 To inspect the response in PowerShell while the backend is running:
 
 ```powershell
